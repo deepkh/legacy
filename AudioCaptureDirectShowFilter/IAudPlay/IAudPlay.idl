@@ -1,0 +1,44 @@
+// IAudPlay.idl : type library source for IAudPlay.dll
+// This file will be processed by the MIDL compiler to produce the
+// type library (IAudPlay.tlb).
+//03B60FE0-7168-44f2-8D22-B7989CFFB???		??? from 100 to 1FF
+
+import "Unknwn.idl";
+import "ShareData.h";
+
+[
+	object
+	, uuid(03B60FE0-7168-44f2-8D22-B7989CFFB101)
+	, pointer_default(unique)
+]
+interface IAudPlay: IUnknown
+{
+	HRESULT SelDev([in] int nIndex);
+	HRESULT GetDevProps([in] int nIndex, [in] wchar_t *pDevName);
+	HRESULT GetDevCount([in] int *pCount);
+
+	HRESULT SetFormat([in] WAVEFORMATEX2 *pFmt, [in] int cbBuffer);
+	HRESULT AddClip([in] char *pBuf, [in] int nSize, [in] int nTimeStamp);
+
+	HRESULT InitGraph();
+	HRESULT UnInitGraph();
+
+	HRESULT Run();
+	HRESULT Pause();
+	HRESULT Stop();
+};
+
+
+[ uuid(AA47C348-A27B-4D33-8F0D-374B2539AC78), version(1.0) ]
+library IAudPlay
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+	[
+		uuid(03B60FE0-7168-44f2-8D22-B7989CFFB100),
+	]
+	coclass AudPlay
+	{
+		interface IAudPlay;
+	};
+};

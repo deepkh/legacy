@@ -1,0 +1,75 @@
+// IAudCapture.idl : type library source for IAudCapture.dll
+// This file will be processed by the MIDL compiler to produce the
+// type library (IAudCapture.tlb).
+//03B60FE0-7168-44f2-8D22-B7989CFFB???		??? from 000 to 0FF
+
+import "Unknwn.idl";
+import "ShareData.h";
+
+
+//IAudReceiver
+[
+	object
+	, uuid(03B60FE0-7168-44f2-8D22-B7989CFFB001)
+	, pointer_default(unique)
+]
+interface IAudReceiver: IUnknown
+{
+	HRESULT Clip([in] char *pBuf, [in] int nSize, [in] int nTimeStamp, [in] char *pParam);
+};
+
+
+//IAudCapture
+[
+	object
+	, uuid(03B60FE0-7168-44f2-8D22-B7989CFFB003)
+	, pointer_default(unique)
+]
+interface IAudCapture: IUnknown
+{
+	HRESULT SetCapLatency([in] int nMillis);
+	HRESULT GetProps([in] char *pProps); //ALLOCATOR_PROPERTIES
+	HRESULT GetMediaType([in] char *pMediaType);//AM_MEDIA_TYPE
+
+	HRESULT SetVol([in] double fVal);
+	HRESULT GetVol([in] double *pVal);
+
+	HRESULT SelFmt([in] int nIndex);
+	HRESULT GetFmtProps([in] int nIndex, [in] WAVEFORMATEX2 *pFmt);
+	HRESULT GetFmtCount([in] int *pCount);
+
+	HRESULT SelInPin([in] int nIndex);
+	HRESULT GetInPinProps([in] int nIndex, [in] wchar_t *pPinNamet);
+	HRESULT GetInPinCount([in] int *pCount);
+
+	HRESULT SelDev([in] int nIndex);
+	HRESULT GetDevProps([in] int nIndex, [in] wchar_t *pDevName);
+	HRESULT GetDevCount([in] int *pCount);
+
+	HRESULT AddReceiver([in] IAudReceiver *pReceiver, [in] char *pParam);
+	HRESULT DelReceiver([in] IAudReceiver *pReceiver);
+
+	HRESULT InitGraph();
+	HRESULT UnInitGraph();
+
+	HRESULT Run();
+	HRESULT Pause();
+	HRESULT Stop();
+};
+
+
+[ uuid(3827C1B9-BB77-4BDF-9802-A1308E080216), version(1.0) ]
+library IAudCaptureLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		//CLSID_AudCapture
+		uuid(03B60FE0-7168-44f2-8D22-B7989CFFB000),
+	]
+	coclass AudCapture
+	{
+		interface IAudCapture;
+	};
+};

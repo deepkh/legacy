@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IAudClient", "IAudClient.vcproj", "{ACD85326-83E4-42EF-B5C8-156FA7312432}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IAudCapture", "..\IAudCapture\IAudCapture.vcproj", "{FF6C6A57-8C31-4E32-A788-B39C2ECE3602}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IAudPlay", "..\IAudPlay\IAudPlay.vcproj", "{ED884DAE-ABE5-4C23-B62A-798725E21F48}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ACD85326-83E4-42EF-B5C8-156FA7312432}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ACD85326-83E4-42EF-B5C8-156FA7312432}.Debug|Win32.Build.0 = Debug|Win32
+		{ACD85326-83E4-42EF-B5C8-156FA7312432}.Release|Win32.ActiveCfg = Release|Win32
+		{ACD85326-83E4-42EF-B5C8-156FA7312432}.Release|Win32.Build.0 = Release|Win32
+		{FF6C6A57-8C31-4E32-A788-B39C2ECE3602}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FF6C6A57-8C31-4E32-A788-B39C2ECE3602}.Debug|Win32.Build.0 = Debug|Win32
+		{FF6C6A57-8C31-4E32-A788-B39C2ECE3602}.Release|Win32.ActiveCfg = Release|Win32
+		{FF6C6A57-8C31-4E32-A788-B39C2ECE3602}.Release|Win32.Build.0 = Release|Win32
+		{ED884DAE-ABE5-4C23-B62A-798725E21F48}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ED884DAE-ABE5-4C23-B62A-798725E21F48}.Debug|Win32.Build.0 = Debug|Win32
+		{ED884DAE-ABE5-4C23-B62A-798725E21F48}.Release|Win32.ActiveCfg = Release|Win32
+		{ED884DAE-ABE5-4C23-B62A-798725E21F48}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
