@@ -1,0 +1,258 @@
+<p>from 2560x1440@32bpp downscale to 1920x1080@32bpp with bilinear interpolation. on my machine E3-1230v2.&nbsp;</p>
+<p>I have been try the followings down scaling bilinear interpolation algorithm.&nbsp;</p>
+<ol>
+<li>1. <a href="http://blog.yam.com/chu24688/article/44797337">Qt: ¼v¹³³B: Image Resizing by Bilinear Interpolation</a>&nbsp;</li>
+<li>2. <a href="http://fastcpp.blogspot.tw/2011/06/bilinear-pixel-interpolation-using-sse.html">Bilinear Pixel Interpolation using SSE</a>&nbsp;(SSE3 version ~ 22ms)</li>
+<li>3. <a href="http://pulsar.webshaker.net/2011/05/25/bilinear-enlarge-with-neon/">Bilinear enlarge with NEON</a>&nbsp;(C version ~ 28ms)</li>
+<li>4. ffmpeg sw_scale (SWS_BILINEAR ~ 11ms) (SWS_FAST_BILINEAR 8~9ms)</li>
+</ol>
+<p>the sw_scale are good speed but have a little blur. And most importance thing is that it's license as GPL or LGPL. It's limited to me if someday I need my code to a&nbsp;commerce. So&nbsp;I need to try down scaling by myself. So I have experiments the&nbsp;follwoings code. The <strong>firefly_stretch_sse2</strong>&nbsp;fast then the above code. It's just cost <span style="color: #ff0000;">9ms to</span>&nbsp;down scaling RGBA from 2560x1440 to 1920x1080 by bilinear interpolation. You could adjusting the array of fx1fx and fy1fy to more sharpness or blurriness.&nbsp;</p>
+<p>the results image:</p>
+<p>sws_scale(SWS_BILINEAR) (origin resolution are 1920x1080. but, for more detail, I have capture from fullscreen of PotPlayer ):<br /> <a href="https://dl.dropboxusercontent.com/u/68121779/sws_bilinear.png"><img src="https://dl.dropboxusercontent.com/u/68121779/sws_bilinear.png" alt="" width="1280" height="720" /></a></p>
+<p>firefly_stretch_sse2 (origin resolution are 1920x1080. but, for more detail, I have capture from fullscreen of PotPlayer ):<br /> <a href="https://dl.dropboxusercontent.com/u/68121779/firefly_stretch_sse2.png"><img src="https://dl.dropboxusercontent.com/u/68121779/firefly_stretch_sse2.png" alt="" width="1280" height="720" /></a></p>
+<p>&nbsp;</p>
+<pre class="brush: cpp">typedef struct {
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	uint8_t a;
+} RGBA __attribute__((aligned(4)));
+
+typedef union {
+	RGBA comp;
+	int32_t val;
+} pixel __attribute__((aligned(4)));
+
+/***
+  * author: deepkh (deepkh AT gmail.com)
+  * date: 2014/08/22
+  * /
+/******************* C version. float, 68ms *************************/
+static void strech_c2(pixel *src, pixel *dst, int w, int h, int ow, int oh)
+{
+	float wr = w/(float)ow;
+	float hr = h/(float)oh;
+	int x,y;
+	float x2, y2;
+	float fx, fy, fx1, fy1;
+	int px, py;
+	int r,g,b;
+	pixel A, B, C, D, E, F;
+
+	for (y=0; y&lt;oh; y++) {
+		y2 = y*hr;
+		py = (int) y2;
+		fy = y2 - py;
+		fy1 = 1.0f - fy;
+		for (x=0; x&lt;ow; x++) {
+			x2 = x*wr;
+			px = (int) x2;
+			fx = x2 - px;
+			fx1 = 1.0f - fx;
+
+			A.val = (src + py*w + px + 0)-&gt;val;
+			B.val = (src + py*w + px + 1)-&gt;val;
+			C.val = (src + py*w + px + w)-&gt;val;
+			D.val = (src + py*w + px + w + 1)-&gt;val;
+
+			E.comp.r = A.comp.r*fx1 + B.comp.r*fx;
+			E.comp.g = A.comp.g*fx1 + B.comp.g*fx;
+			E.comp.b = A.comp.b*fx1 + B.comp.b*fx;
+			E.comp.a = A.comp.a*fx1 + B.comp.a*fx;
+
+			F.comp.r = C.comp.r*fx1 + D.comp.r*fx;
+			F.comp.g = C.comp.g*fx1 + D.comp.g*fx;
+			F.comp.b = C.comp.b*fx1 + D.comp.b*fx;
+			F.comp.a = C.comp.a*fx1 + D.comp.a*fx;
+
+			A.comp.r = E.comp.r*fy1 + F.comp.r*fy;
+			A.comp.g = E.comp.g*fy1 + F.comp.g*fy;
+			A.comp.b = E.comp.b*fy1 + F.comp.b*fy;
+			A.comp.a = E.comp.a*fy1 + F.comp.a*fy;
+
+			dst-&gt;val = A.val;
+			dst++;
+		}
+	}
+}
+
+/******************* C version. integer, 48ms *************************/
+static void strech_c2(pixel *src, pixel *dst, int w, int h, int ow, int oh)
+{
+	float wr = w/(float)ow;
+	float hr = h/(float)oh;
+	int x,y;
+	float x2, y2;
+	//float fx, fy, fx1, fy1;
+	int fx, fy, fx1, fy1;
+	int px, py;
+	int r,g,b;
+	pixel A, B, C, D, E, F;
+	int SHIFT = 8;		//256
+
+	for (y=0; y&lt;oh; y++) {
+		y2 = y*hr;
+		py = (int) y2;
+		fy = (y2 - py) *256;
+		fy1 = 256 - fy;
+		for (x=0; x&lt;ow; x++) {
+			x2 = x*wr;
+			px = (int) x2;
+			fx = (x2 - px)*256;
+			fx1 = 256 - fx;
+
+			A.val = (src + py*w + px + 0)-&gt;val;
+			B.val = (src + py*w + px + 1)-&gt;val;
+			C.val = (src + py*w + px + w)-&gt;val;
+			D.val = (src + py*w + px + w + 1)-&gt;val;
+
+			E.comp.r = (A.comp.r*fx1 + B.comp.r*fx)&gt;&gt;8;
+			E.comp.g = (A.comp.g*fx1 + B.comp.g*fx)&gt;&gt;8;
+			E.comp.b = (A.comp.b*fx1 + B.comp.b*fx)&gt;&gt;8;
+			E.comp.a = (A.comp.a*fx1 + B.comp.a*fx)&gt;&gt;8;
+
+			F.comp.r = (C.comp.r*fx1 + D.comp.r*fx)&gt;&gt;8;
+			F.comp.g = (C.comp.g*fx1 + D.comp.g*fx)&gt;&gt;8;
+			F.comp.b = (C.comp.b*fx1 + D.comp.b*fx)&gt;&gt;8;
+			F.comp.a = (C.comp.a*fx1 + D.comp.a*fx)&gt;&gt;8;
+
+			A.comp.r = (E.comp.r*fy1 + F.comp.r*fy)&gt;&gt;8;
+			A.comp.g = (E.comp.g*fy1 + F.comp.g*fy)&gt;&gt;8;
+			A.comp.b = (E.comp.b*fy1 + F.comp.b*fy)&gt;&gt;8;
+			A.comp.a = (E.comp.a*fy1 + F.comp.a*fy)&gt;&gt;8;
+
+			dst-&gt;val = A.val;
+			dst++;
+		}
+	}
+}
+
+/******************* SSE2, 9ms *************************/
+static void firefly_stretch_sse2(uint32_t *src, uint32_t *dst, int w, int h, int ow, int oh)
+{
+	float wr = w/(float)ow;
+	float hr = h/(float)oh;
+	int x,y;
+	float x2, y2;
+	int16_t fx, fy, fx1, fy1;
+	int px, py;
+	__m128i ab, cd, abcd;
+	__m128i a12345678;
+	__m128i a5678;
+	__m128i a1234;
+	__m128i a15263748;
+	__m128i fx2, fy2;
+	uint32_t *p;
+	static int16_t *fxfx1 = NULL;
+	static int16_t *fyfy1 = NULL;
+	int16_t *fxfx1p;
+	int16_t *fyfy1p;
+	unsigned int wStepFixed16b, hStepFixed16b, wCoef, hCoef, offsetX, offsetY;
+
+	/** initial weight vector of fx,fx1,fy,fy1 */
+	if (!fxfx1) {
+		fxfx1 = (int16_t*) firefly_calloc(sizeof(int16_t)*8*ow);
+		fxfx1p = fxfx1;
+		for (x=0; x&lt;ow; x++) {
+			x2 = x*wr;
+			px = (int) x2;
+			fx = (x2 - px)*256;
+			fx1 = 256 - fx;
+			fxfx1p[0] = fx1;
+			fxfx1p[1] = fx;
+			fxfx1p[2] = fx1;
+			fxfx1p[3] = fx;
+			fxfx1p[4] = fx1;
+			fxfx1p[5] = fx;
+			fxfx1p[6] = fx1;
+			fxfx1p[7] = fx;
+			fxfx1p += 8;
+		}
+
+		fyfy1 = (int16_t*) firefly_calloc(sizeof(int16_t)*8*oh);
+		fyfy1p = fyfy1;
+		for (y=0; y&lt;oh; y++) {
+			y2 = y*hr;
+			py = (int) y2;
+			fy = (y2 - py) *256;
+			fy1 = 256 - fy;
+			fyfy1p[0] = fy1;
+			fyfy1p[1] = fy;
+			fyfy1p[2] = fy1;
+			fyfy1p[3] = fy;
+			fyfy1p[4] = fy1;
+			fyfy1p[5] = fy;
+			fyfy1p[6] = fy1;
+			fyfy1p[7] = fy;
+			fyfy1p += 8;
+		}
+	}
+
+	wStepFixed16b = ((w - 1) &lt;&lt; 16) / (ow - 1);
+	hStepFixed16b = ((h - 1) &lt;&lt; 16) / (oh - 1);
+	hCoef = 0;
+
+	fyfy1p = fyfy1;
+	for (y=0; y&lt;oh; y++) {
+		offsetY = (hCoef &gt;&gt; 16);
+		wCoef = 0;
+
+		fxfx1p = fxfx1;
+		fy2 = _mm_loadu_si128((const __m128i*) fyfy1p);
+		fyfy1p+=8;
+
+		for (x=0; x&lt;ow; x++) {
+			offsetX = (wCoef &gt;&gt; 16);
+
+			p = src + offsetY * w + offsetX;
+
+			_mm_prefetch(fxfx1p+8, _MM_HINT_NTA);
+			fx2 = _mm_loadu_si128((const __m128i*) fxfx1p);
+
+			// A: ab = a*fx1 + b*fx
+			//asume fx=0x7f, fx1=0x7f, fy=0x7f, fy1=0x7f =&gt; half of 256
+			//asume p = 0x01 0x02 0x03 0x04 0x05 0x06 0x07 0x08 =&gt; ARGB ARGB
+			/* 007F007F007F007F007F007F007F007F */
+			ab = _mm_loadl_epi64((const __m128i*) p);
+			/* 00000000000000000807060504030201 */
+			a12345678 = _mm_unpacklo_epi8(ab, _mm_setzero_si128());
+			/* 00080007000600050004000300020001 */
+			a5678 = _mm_unpacklo_epi64(a12345678, _mm_setzero_si128());
+			/* 00000000000000000004000300020001 */
+			a1234 = _mm_unpackhi_epi64(a12345678, _mm_setzero_si128());
+			/* 00080004000700030006000200050001  */
+			a15263748 = _mm_unpacklo_epi16(a5678, a1234);
+			/* 000005F4000004F6000003F8000002FA */
+			ab = _mm_madd_epi16(a15263748, fx2);
+			/* 00000005000000040000000300000002 */
+			ab = _mm_srai_epi32(ab, 8);
+			/* 00000000000000000005000400030002 */
+			ab = _mm_packs_epi32(ab, _mm_setzero_si128());
+
+			// B: cd = a*fx1 + b*fx
+			cd = _mm_loadl_epi64((const __m128i*) (p+w));
+			a12345678 = _mm_unpacklo_epi8(cd, _mm_setzero_si128());
+			a5678 = _mm_unpacklo_epi64(a12345678, _mm_setzero_si128());
+			a1234 = _mm_unpackhi_epi64(a12345678, _mm_setzero_si128());
+			a15263748 = _mm_unpacklo_epi16(a5678, a1234);
+			cd = _mm_madd_epi16(a15263748, fx2);
+			cd = _mm_srai_epi32(cd, 8);
+			cd = _mm_packs_epi32(cd, _mm_setzero_si128());
+
+			// C: abcd = ab*fy1 + cd*fy
+			//abcd = ab0,cd0,ab1,cd1,ab2,cd2,ab3,cd3
+			abcd = _mm_unpacklo_epi16(ab, cd);
+			abcd = _mm_madd_epi16(abcd, fy2);
+			abcd = _mm_srai_epi32(abcd, 8);
+			abcd = _mm_packs_epi32(abcd, _mm_setzero_si128());
+			abcd = _mm_packus_epi16(abcd, _mm_setzero_si128());
+
+			*dst = _mm_cvtsi128_si32(abcd);
+			fxfx1p += 8;
+			dst++;
+			wCoef += wStepFixed16b;
+		}
+		hCoef += hStepFixed16b;
+	}
+}</pre>
+<p>&nbsp;</p>

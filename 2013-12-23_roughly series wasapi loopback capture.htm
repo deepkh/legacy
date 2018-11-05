@@ -1,0 +1,312 @@
+<p>this is a very roughly code scrambled from google. but, if you want more accuracy for the part of followings code. please google as 'wasapi loopback recording'.&nbsp;</p>
+<p>this code should complied under vs2010 and mingw-w64.&nbsp;</p>
+<p>if you want to compiling under mingw-w64 please type the library like</p>
+<pre style="margin-top: 15px; margin-bottom: 15px; padding: 6px 10px; list-style: none; background-color: #f8f8f8; border: 1px solid #dddddd; overflow: auto; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; word-wrap: normal;"><span style="color: #333333; font-size: x-small;"><span style="line-height: 19px;"><span style="font-family: Consolas, 'Liberation Mono', Courier, monospace;">g++ -o loopback.exe.exe loopback_capture.o -L. </span><span style="color: #ff0000;">-luuid -lole32</span></span></span></pre>
+<p>&nbsp;</p>
+<p>the roughly code as below. &nbsp;the will record all of sound what you here under windows 7 as wave file to D:\xxx.wav. &nbsp;According to the msdn say. the loopback capture will run on soft mode.&nbsp;</p>
+<pre class="brush: cpp">#include &lt;windows.h&gt;
+#include &lt;Audioclient.h&gt;
+#include &lt;initguid.h&gt;
+#include &lt;mmdeviceapi.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;lame/lame.h&gt;
+
+#ifdef __MINGW32__
+const GUID KSDATAFORMAT_SUBTYPE_PCM = {0x00000001, 0x0000, 0x0010,{0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}};
+const GUID KSDATAFORMAT_SUBTYPE_IEEE_FLOAT = {0x00000003, 0x0000, 0x0010, {0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}};
+#else
+const CLSID CLSID_MMDeviceEnumerator = __uuidof(MMDeviceEnumerator);
+const IID IID_IMMDeviceEnumerator = __uuidof(IMMDeviceEnumerator);
+#endif
+
+const IID IID_IAudioClient = __uuidof(IAudioClient);
+const IID IID_IAudioCaptureClient = __uuidof(IAudioCaptureClient);
+
+#define REFTIMES_PER_SEC  10000000
+#define REFTIMES_PER_MILLISEC  10000
+#define SAFE_RELEASE(punk)  \
+				if ((punk) != NULL)  \
+				{ (punk)-&gt;Release(); (punk) = NULL; }
+
+#define SAMPLE_BIT 16
+
+struct WaveHeader
+{
+        char RIFF_marker[4];
+        UINT32 file_size;
+        char filetype_header[4];
+        char format_marker[4];
+        UINT32 data_header_length;
+        UINT32 format_type;
+        UINT32 number_of_channels;
+        UINT32 sample_rate;
+        UINT32 bytes_per_second;
+        UINT32 bytes_per_frame;
+        UINT32 bits_per_sample;
+};
+
+struct WaveHeader *genericWAVHeader(UINT32 sample_rate, UINT16 bit_depth, UINT16 channels)
+{
+    struct WaveHeader *hdr;
+    hdr = (WaveHeader*) malloc(sizeof(*hdr));
+    if (!hdr)
+        return NULL;
+
+    memcpy(&amp;hdr-&gt;RIFF_marker, "RIFF", 4);
+    memcpy(&amp;hdr-&gt;filetype_header, "WAVE", 4);
+    memcpy(&amp;hdr-&gt;format_marker, "fmt ", 4);
+    hdr-&gt;data_header_length = 16;
+    hdr-&gt;format_type = 1;
+    hdr-&gt;number_of_channels = channels;
+    hdr-&gt;sample_rate = sample_rate;
+    hdr-&gt;bytes_per_second = sample_rate * channels * bit_depth / 8;
+    hdr-&gt;bytes_per_frame = channels * bit_depth / 8;
+    hdr-&gt;bits_per_sample = bit_depth;
+
+    return hdr;
+}
+
+int writeWAVHeader(FILE *fp, struct WaveHeader *hdr, int duration_sec)
+{
+    if (!hdr)
+        return -1;
+
+	fwrite(&amp;hdr-&gt;RIFF_marker, 1, 4, fp);
+    fwrite(&amp;hdr-&gt;file_size, 1, 4, fp);
+    fwrite(&amp;hdr-&gt;filetype_header, 1, 4, fp);
+    fwrite(&amp;hdr-&gt;format_marker, 1, 4, fp);
+    fwrite(&amp;hdr-&gt;data_header_length, 1, 4, fp);
+    fwrite(&amp;hdr-&gt;format_type, 1, 2, fp);
+    fwrite(&amp;hdr-&gt;number_of_channels, 1, 2, fp);
+    fwrite(&amp;hdr-&gt;sample_rate, 1, 4, fp);
+    fwrite(&amp;hdr-&gt;bytes_per_second, 1, 4, fp);
+    fwrite(&amp;hdr-&gt;bytes_per_frame, 1, 2, fp);
+    fwrite(&amp;hdr-&gt;bits_per_sample, 1, 2, fp);
+    fwrite("data", 1, 4, fp);
+
+    UINT32 data_size = hdr-&gt;sample_rate * hdr-&gt;number_of_channels * (hdr-&gt;bits_per_sample/8) * duration_sec;//hdr-&gt;file_size + 8 - 44;
+    fwrite(&amp;data_size, 1, 4, fp);
+
+    return 0;
+}
+
+HRESULT loopback_copy(BYTE *byte, UINT32 frame_num, BOOL *bDone)
+{
+	static int c = 0;
+	static int time_begin = 0;
+	static int time_prev = 0;
+	static int total_sample = 0;
+	static int duration = 60*60;
+	static struct WaveHeader *wav;
+	static FILE *fp;
+
+	int t = ::GetTickCount();
+	if (time_begin == 0) {
+		time_begin = t;
+		fp = fopen("D:\\xx.wav", "wb");
+		wav = genericWAVHeader(44100, 16, 2);
+		writeWAVHeader(fp, wav, duration);
+		goto finish;
+	}
+
+	//printf("%.3f frame_num: %d\n", (t-time_begin)/1000.0f, frame_num);
+	fwrite(byte, 1, frame_num * (16/8) * 2, fp);
+
+	if ((total_sample+=frame_num) &gt;= (duration*44100)) {
+		printf("%.3f size: %d, %d\n", (t-time_begin)/1000.0f, frame_num, total_sample);
+		*bDone = true;
+		fclose(fp);
+	}
+
+finish:
+	time_prev = t;
+	return S_OK;
+}
+
+HRESULT loopback_capture()
+{
+	HRESULT hr;
+	REFERENCE_TIME hnsRequestedDuration = REFTIMES_PER_SEC;
+	REFERENCE_TIME hnsActualDuration;
+	UINT32 bufferFrameCount;
+	UINT32 numFramesAvailable;
+	IMMDeviceEnumerator *pEnumerator = NULL;
+	IMMDevice *pDevice = NULL;
+	IAudioClient *pAudioClient = NULL;
+	IAudioCaptureClient *pCaptureClient = NULL;
+	WAVEFORMATEX *pwfx = NULL;
+	UINT32 packetLength = 0;
+	BOOL bDone = FALSE;
+	BYTE *pData;
+	DWORD flags;
+	BYTE *silence = new BYTE[44100];
+	int ccc = 0;
+	memset(silence, 0, 44100);
+
+	if (FAILED(hr = CoCreateInstance(
+			CLSID_MMDeviceEnumerator, NULL,
+			CLSCTX_ALL, IID_IMMDeviceEnumerator,
+			(void**)&amp;pEnumerator))) {
+		fprintf(stderr, "failed to CoCreateInstance\n");
+		goto Exit;
+	}
+
+	if (FAILED(hr = pEnumerator-&gt;GetDefaultAudioEndpoint(
+						eRender, eConsole, &amp;pDevice))) {
+		fprintf(stderr, "failed to GetDefaultAudioEndpoint\n");
+		goto Exit;
+	}
+
+	if (FAILED(hr = pDevice-&gt;Activate(
+					IID_IAudioClient, CLSCTX_ALL,
+					NULL, (void**)&amp;pAudioClient))) {
+		fprintf(stderr, "failed to Activate\n");
+		goto Exit;
+	}
+
+	REFERENCE_TIME hnsDefaultDevicePeriod;
+	if (FAILED(hr = pAudioClient-&gt;GetDevicePeriod(&amp;hnsDefaultDevicePeriod, NULL))) {
+		fprintf(stderr, "IAudioClient::GetDevicePeriod failed: hr = 0x%08x\n", hr);
+		goto Exit;
+	}
+
+	if (FAILED(hr = pAudioClient-&gt;GetMixFormat(&amp;pwfx))) {
+		fprintf(stderr, "failed to GetMixFormat\n");
+		goto Exit;
+	}
+
+	switch (pwfx-&gt;wFormatTag) {
+		case WAVE_FORMAT_IEEE_FLOAT:
+			pwfx-&gt;wFormatTag = WAVE_FORMAT_PCM;
+			pwfx-&gt;wBitsPerSample = 16;
+			pwfx-&gt;nBlockAlign = pwfx-&gt;nChannels * pwfx-&gt;wBitsPerSample / 8;
+			pwfx-&gt;nAvgBytesPerSec = pwfx-&gt;nBlockAlign * pwfx-&gt;nSamplesPerSec;
+			break;
+
+		case WAVE_FORMAT_EXTENSIBLE:
+			{
+				// naked scope for case-local variable
+				PWAVEFORMATEXTENSIBLE pEx = reinterpret_cast
+(pwfx);
+				if (IsEqualGUID(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT, pEx-&gt;SubFormat)) {
+					pEx-&gt;SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
+					pEx-&gt;Samples.wValidBitsPerSample = 16;
+					pwfx-&gt;wBitsPerSample = 16;
+					pwfx-&gt;nBlockAlign = pwfx-&gt;nChannels * pwfx-&gt;wBitsPerSample / 8;
+					pwfx-&gt;nAvgBytesPerSec = pwfx-&gt;nBlockAlign * pwfx-&gt;nSamplesPerSec;
+					printf("OHOHOHOHOHOH\n");
+				} else {
+					printf("Don't know how to coerce mix format to int-16\n");
+					CoTaskMemFree(pwfx);
+					pAudioClient-&gt;Release();
+					return E_UNEXPECTED;
+				}
+			}
+			break;
+
+		default:
+			printf("Don't know how to coerce WAVEFORMATEX with wFormatTag = 0x%08x to int-16\n", pwfx-&gt;wFormatTag);
+			CoTaskMemFree(pwfx);
+			pAudioClient-&gt;Release();
+			return E_UNEXPECTED;
+	}
+
+	if (FAILED(hr = pAudioClient-&gt;Initialize(
+							AUDCLNT_SHAREMODE_SHARED,
+							AUDCLNT_STREAMFLAGS_LOOPBACK,
+							hnsRequestedDuration,
+							0,
+							pwfx,
+							NULL))) {
+		fprintf(stderr, "failed to Initialize\n");
+		goto Exit;
+	}
+
+	if (FAILED(hr = pAudioClient-&gt;GetBufferSize(&amp;bufferFrameCount))) {
+		fprintf(stderr, "failed to GetBufferSize\n");
+		goto Exit;
+	}
+
+	if (FAILED(hr = pAudioClient-&gt;GetService(
+							IID_IAudioCaptureClient,
+							(void**)&amp;pCaptureClient))) {
+		fprintf(stderr, "failed to GetService\n");
+		goto Exit;
+	}
+
+	hnsActualDuration = (double)REFTIMES_PER_SEC *
+						bufferFrameCount / pwfx-&gt;nSamplesPerSec;
+
+	printf("wFormatTag: %d\n", pwfx-&gt;wFormatTag);
+	printf("nChannel: %d\n", pwfx-&gt;nChannels);
+	printf("nSamplesPerSec: %d\n", pwfx-&gt;nSamplesPerSec);
+	printf("cbSize: %d\n", pwfx-&gt;cbSize);
+	printf("wBitsPerSample: %d\n", pwfx-&gt;wBitsPerSample);
+	printf("nAvgBytesPerSec: %d\n", pwfx-&gt;nAvgBytesPerSec);
+	printf("nBlockAlign: %d\n", pwfx-&gt;nBlockAlign);
+	printf("hnsActualDuration: %I64d\n", hnsActualDuration);
+	printf("bufferFrameCount: %d\n", bufferFrameCount);
+	printf("sleep: %I64d\n", hnsActualDuration/REFTIMES_PER_MILLISEC/2);
+	printf("hnsDefaultDevicePeriod: %I64d\n", hnsDefaultDevicePeriod);
+
+	if (FAILED(hr = pAudioClient-&gt;Start())) {
+		fprintf(stderr, "failed to GetBuffer\n");
+		goto Exit;
+	}
+
+	// Each loop fills about half of the shared buffer.
+	while (bDone == FALSE)
+	{
+		// Get the available data in the shared buffer.
+		if (FAILED(hr = pCaptureClient-&gt;GetBuffer(
+								&amp;pData,
+								&amp;numFramesAvailable,
+								&amp;flags, NULL, NULL))) {
+			fprintf(stderr, "failed to GetBuffer\n");
+			goto Exit;
+		}
+
+		if (numFramesAvailable) {
+			if (flags &amp; AUDCLNT_BUFFERFLAGS_SILENT) {
+				pData = silence;  // Tell CopyData to write silence.
+				printf("%d silence. %d\n", ccc++, numFramesAvailable);
+			}
+			loopback_copy(pData, numFramesAvailable, &amp;bDone);
+		} else {
+			Sleep(hnsActualDuration/REFTIMES_PER_MILLISEC/2);
+		}
+
+		if (FAILED(hr = pCaptureClient-&gt;ReleaseBuffer(numFramesAvailable))) {
+			fprintf(stderr, "failed to ReleaseBuffer\n");
+			goto Exit;
+		}
+
+		if (FAILED(hr = pCaptureClient-&gt;GetNextPacketSize(&amp;packetLength))) {
+			fprintf(stderr, "failed to ReleasGetNextPacketSizeeBuffer\n");
+			goto Exit;
+		}
+	}
+
+	if (FAILED(hr = pAudioClient-&gt;Stop())) {
+		fprintf(stderr, "failed to Stop\n");
+		goto Exit;
+	}
+
+Exit:
+	CoTaskMemFree(pwfx);
+	SAFE_RELEASE(pEnumerator)
+	SAFE_RELEASE(pDevice)
+	SAFE_RELEASE(pAudioClient)
+	SAFE_RELEASE(pCaptureClient)
+	return hr;
+}
+
+int main(int argc, char* argv[])
+{
+	CoInitializeEx(NULL,COINIT_MULTITHREADED);
+	loopback_capture();
+	CoUninitialize();
+	return 0;
+}</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>

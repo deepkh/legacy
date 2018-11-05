@@ -1,0 +1,79 @@
+<p>The followings code of "RGB32toYUV420" is design by myself.  I have been try to implements version of mmx. But, It's seem not fast compared to the C version. Although the C version is fastest that I have been try . But, I think it not fast enough.</p>
+<p><strong>MMX RGB2Y</strong></p>
+<pre class="brush: cpp">static void do_mmx_rgb2y(uint32_t *y, uint8_t *rgb, int wh)
+{
+	__m64 nNull = _mm_setzero_si64();
+	__m64 r_coeff = _mm_set_pi16(66, 66, 66, 66);
+	__m64 g_coeff = _mm_set_pi16(129, 129, 129, 129);
+	__m64 b_coeff = _mm_set_pi16(25, 25, 25, 25);
+	__m64 o_coeff = _mm_set_pi16(16, 16, 16, 16);
+	__m64 y64;
+	__m64 r, g, b;
+	int i;
+
+	wh/=4;
+
+	_mm_empty();
+        __asm {
+                emms            ;clear emms
+        }
+
+	for (i=0; i&lt;wh; i++) {
+		r = _mm_mullo_pi16(r, r_coeff);
+		g = _mm_mullo_pi16(g, g_coeff);
+		b = _mm_mullo_pi16(b, b_coeff);
+		y64 = _mm_adds_pu16(r, g);
+		y64 = _mm_adds_pu16(y64, b);
+		y64 = _mm_srli_pi16(y64, 8);
+		y64 = _mm_adds_pu16(y64, o_coeff);
+		y64 = _mm_packs_pu16(y64, nNull);
+		*y = _mm_cvtsi64_si32(y64);
+		y++;
+		rgb+=16;
+	}
+	_mm_empty();
+}</pre>
+<p><strong>C Version</strong></p>
+<pre class="brush: cpp">	rgb = in-&gt;inbuf; //RGBA 32Bit
+	yy = p-&gt;outbuf-&gt;plane[0];
+	v = p-&gt;outbuf-&gt;plane[1];
+	u = p-&gt;outbuf-&gt;plane[2];
+	wh = width*height;
+	for (y=0; y&lt;wh; y++) {
+		*yy = rgb2y(rgb[0],rgb[1],rgb[2]);
+		rgb += byte_per_sample;
+		yy++;
+	}
+
+	rgb = in-&gt;buf;
+	rgb2 = rgb + line_size;
+	for (y=0; y&lt;h; y+=2) {
+		for (x=0; x&lt;w; x+=2) {
+
+			r2 = rgb[0] + rgb[4] + rgb2[0] + rgb2[4];
+			g2 = rgb[1] + rgb[5] + rgb2[1] + rgb2[5];
+			b2 = rgb[2] + rgb[6] + rgb2[2] + rgb2[6];
+
+			r2 &gt;&gt;= 2;
+			g2 &gt;&gt;= 2;
+			b2 &gt;&gt;= 2;
+
+			*u = (uint8_t) rgb2u(r2,g2,b2);
+			*v = (uint8_t) rgb2v(r2,g2,b2);
+			rgb += two_sample_size;
+			rgb2 += two_sample_size;
+			u++;
+			v++;
+		}
+		rgb += line_size;
+		rgb2 += line_size;
+	}</pre>
+<p>So I have try to find some better performance code of "RGB32toYUV420" conveter from google. And I have found only one project implements RGB32toYUV420 SIMD conversion by Chromium. It's have version of <a href="https://chromium.googlesource.com/chromium/src/media/+/refs/heads/master/base/simd/convert_rgb_to_yuv_sse2.cc">SSE2</a> and <a href="https://chromium.googlesource.com/chromium/src/media/+/refs/heads/master/base/simd/convert_rgb_to_yuv_ssse3.cc">SSE3</a> but no MMX. It's even faster than ffmpeg swscale by the followings experiments result. &nbsp;</p>
+<p><strong>The experiments result:</strong></p>
+<p><span style="font-weight: bold; font-size: 13px;">My Version:</span></p>
+<p>8~9 ms per&nbsp;2560x1440@32bpp&nbsp;frame &nbsp;<span style="font-size: 13px;">@&nbsp;</span><span style="font-size: 13px;">E3-1230-V2</span></p>
+<p><span style="font-weight: bold; font-size: 13px;">ffmpeg-2.1.x sws_scale(SWS_POINT):</span></p>
+<p>6ms per&nbsp;2560x1440@32bpp&nbsp;frame&nbsp;<span style="font-size: 13px;">@</span><span style="font-size: 13px;">E3-1230-V2</span></p>
+<p><strong>Chromium SSE2 version:<br />
+</strong> 3 ~ 4 ms per&nbsp;2560x1440@32bpp frame&nbsp;<span style="font-size: 13px;">@</span><span style="font-size: 13px;">E3-1230-V2</span></p>
+<p>&nbsp;</p>

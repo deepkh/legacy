@@ -1,0 +1,66 @@
+<p>How to resolve the MPEG2TS packet? First of all is to find PAT. PAT include the information of PMT . And the PMT include the information of video/audio PID. Finally you will know the video/audio PID via PMT table. So you can assemble the multiple video/audio PES packet to a video frame or audio via the video/audio PID.</p>
+<h3>TS Header Properties</h3>
+<table>
+<tbody>
+<tr>
+<td><strong>syntax</strong></td>
+<td><strong>value</strong></td>
+<td><strong>describe</strong></td>
+</tr>
+<tr>
+<td>sync_byte</td>
+<td>0x47 (71)</td>
+<td>sync bytes. always 0x47</td>
+</tr>
+<tr>
+<td>transport_error_indicator</td>
+<td>0 or 1</td>
+<td>when error is occurred it's specified 1</td>
+</tr>
+<tr>
+<td>payload_unit_start_indicator</td>
+<td>0 or 1</td>
+<td>It's specified 1 if is the start packet of multiple PES packet.</td>
+</tr>
+<tr>
+<td>transport_priority</td>
+<td>0 or 1</td>
+<td>don't care</td>
+</tr>
+<tr>
+<td>PID</td>
+<td>13 bit number</td>
+<td>PAT always 0x00.</td>
+</tr>
+<tr>
+<td>transport_scrambling_control</td>
+<td>0 or 1</td>
+<td>don't care</td>
+</tr>
+<tr>
+<td>adaptation_field_control</td>
+<td>0x02 or 0x01 or 0x03</td>
+<td>if include adaptation_field then the second bit is 1. if include payload then the first bit is 1</td>
+</tr>
+<tr>
+<td>continuity_counter</td>
+<td>4bit number. 0x00 ~ 0x15</td>
+<td>the serial number of PES packet</td>
+</tr>
+</tbody>
+</table>
+<h3>PAT (Program Association Table) Properties</h3>
+<table>
+<tbody>
+<tr>
+<td><strong>syntax</strong></td>
+<td><strong>value</strong></td>
+<td><strong>describe</strong></td>
+</tr>
+<tr>
+<td>sync_byte</td>
+<td>0x47 (71)</td>
+<td>sync bytes. always 0x47</td>
+</tr>
+</tbody>
+</table>

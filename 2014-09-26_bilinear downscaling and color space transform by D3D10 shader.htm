@@ -1,0 +1,611 @@
+<p>Due to we want to capture D3D9EX/D3D10.1/D3D11 screen. Compared to CPU conversion it's better to downscale image and color space transform by GPU. The benefit will avoid slow system memory copy and reduced CPU usage simultaneously. And this way are reference from popular project of&nbsp;<a href="https://github.com/jp9000/OBS">OBS&nbsp;</a>.</p>
+<p>First of all you need setup a source&nbsp;ID3D10Texture2D. In this case the texture are screen of&nbsp;<span style="font-size: 12.8000001907349px;">D3D9EX/D3D10.1/D3D11</span>&nbsp;shared resource from target process. If you dont know how about shared resource work between two different process. please read "<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ee913554(v=vs.85).aspx#direct3d_10.1_device_sharing_with_direct2d">Surface Sharing Between Windows Graphics APIs</a>" for more information.&nbsp;<span style="font-size: 12.8000001907349px;">Simply&nbsp;</span>speaking, shared resource could be shared&nbsp;IDirect3DSurface9,&nbsp;ID3D10Texture2D,&nbsp;ID3D11Texture2D in GPU ram&nbsp;<span style="font-size: 12.8000001907349px;">from different process or different thread</span><span style="font-size: 13px;">.&nbsp;</span></p>
+<p><span style="font-size: 13px;">Compared to CPU downscaling+color space transform. GPU scaler and color space transform only cost <span style="color: #ff0000;">3ms </span>to get RGBA 2560x1440 to YUV420 1920x1080 output. And the CPU scaler need <span style="color: #0000ff;">12ms &nbsp;</span>(<span style="color: #0000ff;">3ms </span>GPU memory to system memory + <span style="color: #0000ff;">9ms </span>downscaling and color space transform)<span style="color: #0000ff;">&nbsp;</span>on same resolution. My CPU E3-2130v2 and GPU card MSI HD6670.</span></p>
+<p>&nbsp;</p>
+<pre class="brush: cpp">/***
+  * author: deepkh (deepkh AT gmail.com)
+  * date: 2014/09/26
+  */
+
+/**
+ * d3dcaplib_10.h
+ */
+
+#ifndef _D3DCAPLIB_10_H_
+#define _D3DCAPLIB_10_H_
+#include "d3dcaplib.h"
+#include &lt;Synchronized.h&gt;
+
+enum d3dcaplib_fmt {
+	d3dcaplib_fmt_rgba = 1,
+	d3dcaplib_fmt_yuv420 = 2,
+	d3dcaplib_fmt_yuv422 = 3,
+	d3dcaplib_fmt_yuv444 = 4
+};
+
+int d3dcaplib_10_open(d3dcaphnd_t *h, HANDLE hSharedHandle
+	, int x, int y, int *pw, int *ph, int scalew, int scaleh
+	, int crop_mode, enum d3dcaplib_fmt fmt);
+int d3dcaplib_10_capture(d3dcaphnd_t h, UINT8 *dst, MutexIPC *mutex);
+int d3dcaplib_10_close(d3dcaphnd_t h);
+
+#endif
+
+/**
+ * d3dcaplib_10.c
+ */
+
+#include "d3dcaplib_10.h"
+#include "d3dcaplib.h"
+#include "helper.h"
+
+#include &lt;Windows.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;d3d10_1.h&gt;
+#include &lt;D3DX10Core.h&gt;
+#include &lt;DxErr.h&gt;
+#include&lt;xnamath.h&gt;
+#include &lt;emmintrin.h&gt;
+#include &lt;tmmintrin.h&gt; //ssse3
+
+struct VertexPos
+{
+	XMFLOAT3 pos;
+	XMFLOAT2 tex0;
+};
+
+typedef struct {
+	ID3D10Device1 *d3d10Device1;
+	ID3D10ShaderResourceView *sharedResourceView;
+
+	ID3D10RenderTargetView *scaleTarget;
+	ID3D10Texture2D *scaleTexture;
+	ID3D10Effect *scaleEffect;
+
+	ID3D10EffectTechnique* scaleTechique;
+	ID3D10EffectShaderResourceVariable* scaleShaderTexure;
+	ID3D10EffectMatrixVariable *scaleRgb2YuvMat;
+	ID3D10EffectScalarVariable *scaleHeight;
+	ID3D10EffectScalarVariable *scaleSwapRB;
+
+	ID3D10InputLayout* scaleInputlayout;
+	ID3D10Buffer* scaleVertexBuffer;
+
+	ID3D10Texture2D *sharedTexture;
+	ID3D10Texture2D *copyTexture;
+	D3D10_TEXTURE2D_DESC desc;
+	D3D10_TEXTURE2D_DESC scaleDesc;;
+	int nRGBAtoBGRAConvert;
+	enum d3dcaplib_fmt fmt;
+
+	int crop_mode;					//1: crop mode, 0: scale mode
+	int x;
+	int y;
+	int src_width;
+	int src_height;
+	int dst_width;
+	int dst_height;
+} d3dcaplib_10;
+
+static DXGI_FORMAT m_hSupportFmt[] = {
+	DXGI_FORMAT_R8G8B8A8_TYPELESS
+	, DXGI_FORMAT_R8G8B8A8_UNORM
+	, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB
+	, DXGI_FORMAT_R8G8B8A8_UINT
+	, DXGI_FORMAT_R8G8B8A8_SNORM
+	, DXGI_FORMAT_R8G8B8A8_SINT
+	, DXGI_FORMAT_B8G8R8A8_UNORM
+	, DXGI_FORMAT_B8G8R8X8_UNORM
+	, DXGI_FORMAT_B8G8R8A8_TYPELESS
+	, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB
+	, DXGI_FORMAT_B8G8R8X8_TYPELESS
+	, DXGI_FORMAT_B8G8R8X8_UNORM_SRGB
+};
+
+static int d3dcaplib_10_check_support_fmt(DXGI_FORMAT fmt)
+{
+	int i;
+	for (i = 0; i &lt; sizeof(m_hSupportFmt) / sizeof(m_hSupportFmt[0]); i++) {
+		if (m_hSupportFmt[i] == fmt) {
+			return 0;
+		}
+	}
+	return -1;
+}
+
+static int d3dcaplib_10_load_shader(d3dcaplib_10 *p)
+{
+	D3D10_PASS_DESC PassDesc;
+	D3D10_BUFFER_DESC vertexDesc;
+	D3D10_SUBRESOURCE_DATA resourceData;
+	static D3D10_INPUT_ELEMENT_DESC solidColorLayout[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	static VertexPos vertices[] =
+	{
+		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f) },
+		{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT2(1.0f, 0.0f) },
+		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT2(0.0f, 0.0f) },
+
+		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f) },
+		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f) },
+	};
+
+	static float rgb2yuv[][16] = {
+			//null
+			{ 0.000000f, 0.000000f, 0.000000f, 0.000000f,
+			0.000000f, 0.000000f, 0.000000f, 0.000000f,
+			0.000000f, 0.000000f, 0.000000f, 0.000000f,
+			0.000000f, 0.000000f, 0.000000f, 0.000000f, },
+
+			//rgba
+			{ 1.000000f, 0.000000f, 0.000000f, 0.000000f,
+			  0.000000f, 1.000000f, 0.000000f, 0.000000f,
+			  0.000000f, 0.000000f, 1.000000f, 0.000000f,
+			  0.000000f, 0.000000f, 0.000000f, 1.000000f, },  //the output serials will be BGRA BGRA . . .
+
+			  //BT709 YUV
+			  { 0.182586f, -0.100644f, 0.439216f, 0.000000f,
+			  0.614231f, -0.338572f, -0.398942f, 0.000000f,
+			  0.062007f, 0.439216f, -0.040274f, 0.000000f,
+			  0.062745f, 0.501961f, 0.501961f, 1.000000f, },
+
+	};
+
+	unsigned int stride = sizeof(VertexPos);
+	unsigned int offset = 0;
+	float clearColor[4] = { 0.0f, 0.0f, 0.25f, 1.0f };
+
+	/** load shader and effect */
+	if (FAILED(D3DX10CreateEffectFromFileA("D:\\workspace\\branches\\d3dcap-0.3\\d3dcaplib\\rgb2yuv.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, p-&gt;d3d10Device1, NULL, NULL, &amp;p-&gt;scaleEffect, NULL, NULL))) {
+		if (FAILED(D3DX10CreateEffectFromFileA("rgb2yuv.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, p-&gt;d3d10Device1, NULL, NULL, &amp;p-&gt;scaleEffect, NULL, NULL))) {
+			fprintf(stderr, "failed to D3DX10CreateEffectFromFileA \n");
+			goto error;
+		}
+	}
+
+	p-&gt;scaleTechique = p-&gt;scaleEffect-&gt;GetTechniqueByName("rgb2yuv");
+	p-&gt;scaleShaderTexure = p-&gt;scaleEffect-&gt;GetVariableByName("tex")-&gt;AsShaderResource();
+	p-&gt;scaleRgb2YuvMat = p-&gt;scaleEffect-&gt;GetVariableByName("rgb2yuvMat")-&gt;AsMatrix();
+	p-&gt;scaleHeight = p-&gt;scaleEffect-&gt;GetVariableByName("height")-&gt;AsScalar();
+	p-&gt;scaleSwapRB = p-&gt;scaleEffect-&gt;GetVariableByName("swapRB")-&gt;AsScalar();
+
+	/* Create the input layout */
+	p-&gt;scaleTechique-&gt;GetPassByIndex(0)-&gt;GetDesc(&amp;PassDesc);
+	if (FAILED(p-&gt;d3d10Device1-&gt;CreateInputLayout(solidColorLayout, ARRAYSIZE(solidColorLayout), PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &amp;p-&gt;scaleInputlayout))) {
+		fprintf(stderr, "failed to CreateInputLayout \n");
+		goto error;
+	}
+
+	/** create vertex buffer */
+	ZeroMemory(&amp;vertexDesc, sizeof(vertexDesc));
+	vertexDesc.Usage = D3D10_USAGE_DEFAULT;
+	vertexDesc.BindFlags = D3D10_BIND_VERTEX_BUFFER;
+	vertexDesc.ByteWidth = sizeof(VertexPos) * 6;
+
+	ZeroMemory(&amp;resourceData, sizeof(resourceData));
+	resourceData.pSysMem = vertices;
+
+	if (FAILED(p-&gt;d3d10Device1-&gt;CreateBuffer(&amp;vertexDesc, &amp;resourceData, &amp;p-&gt;scaleVertexBuffer))) {
+		fprintf(stderr, "failed to create vertex buffer \n");
+		goto error;
+	}
+
+	/** set vertex buf &amp; input layout */
+	p-&gt;d3d10Device1-&gt;ClearRenderTargetView(p-&gt;scaleTarget, clearColor);
+	p-&gt;d3d10Device1-&gt;IASetInputLayout(p-&gt;scaleInputlayout);
+	p-&gt;d3d10Device1-&gt;IASetVertexBuffers(0, 1, &amp;p-&gt;scaleVertexBuffer, &amp;stride, &amp;offset);
+	p-&gt;d3d10Device1-&gt;IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	/** set varaiable to shader */
+	D3DXMATRIX rgb2yuvMat = rgb2yuv[(int)p-&gt;fmt];
+	p-&gt;scaleShaderTexure-&gt;SetResource(p-&gt;sharedResourceView);
+	p-&gt;scaleRgb2YuvMat-&gt;SetMatrix((float*)&amp;rgb2yuvMat);
+	p-&gt;scaleHeight-&gt;SetInt(p-&gt;scaleDesc.Height);
+	p-&gt;scaleSwapRB-&gt;SetInt(p-&gt;nRGBAtoBGRAConvert);
+
+	return 0;
+error:
+	return -1;
+}
+
+int d3dcaplib_10_open(d3dcaphnd_t *h, HANDLE hSharedHandle
+	, int x, int y, int *pw, int *ph , int scalew, int scaleh
+	, int crop_mode, enum d3dcaplib_fmt fmt)
+{
+	d3dcaplib_10 *p = NULL;
+	HRESULT hRet;
+	D3D10_TEXTURE2D_DESC copyDesc;
+	D3D10_SHADER_RESOURCE_VIEW_DESC SRVDesc;
+	D3D10_VIEWPORT viewport;
+	int tmpw;
+	int tmph;
+
+	if ((p = (d3dcaplib_10 *)calloc(1, sizeof(d3dcaplib_10))) == NULL) {
+		fprintf(stderr, "failed to calloc d3dcaplib_10 \n");
+		goto error;
+	}
+
+	if (fmt != d3dcaplib_fmt_rgba &amp;&amp; fmt != d3dcaplib_fmt_yuv420) {
+		fprintf(stderr, "unsupport format %d\n", fmt);
+		goto error;
+	}
+
+	p-&gt;fmt = fmt;
+	p-&gt;crop_mode = crop_mode;
+
+	if (FAILED(hRet = D3D10CreateDevice1(NULL, D3D10_DRIVER_TYPE_HARDWARE, NULL, 0, D3D10_FEATURE_LEVEL_10_0, D3D10_1_SDK_VERSION, &amp;p-&gt;d3d10Device1))) {
+		fprintf(stderr, "failed to D3D10CreateDevice1 in hardware mode. %s\n", DXGetErrorStringA(hRet));
+		goto error;
+	}
+
+	/** Create shared resource and resource view for shader */
+	if (FAILED(hRet = p-&gt;d3d10Device1-&gt;OpenSharedResource(hSharedHandle, __uuidof(ID3D10Texture2D), (void **)&amp;p-&gt;sharedTexture))) {
+		fprintf(stderr, "failed to OpenSharedResource: %s\n", DXGetErrorStringA(hRet));
+		goto error;
+	}
+
+	p-&gt;sharedTexture-&gt;GetDesc(&amp;p-&gt;desc);
+
+	/** scaling by GPU shader  */
+		if (p-&gt;crop_mode) {
+			/** crop mode: x, y, w, h. dont care scalew, scaleh*/
+			p-&gt;x = x;
+			p-&gt;y = y;
+			p-&gt;src_width = p-&gt;desc.Width;
+			p-&gt;src_height = p-&gt;desc.Height;
+			p-&gt;dst_width = *pw;
+			p-&gt;dst_height = *ph;
+			if ((p-&gt;x+p-&gt;dst_width) &gt; p-&gt;src_width || (p-&gt;y+p-&gt;dst_height) &gt; p-&gt;src_height) {
+				p-&gt;dst_width = *pw = p-&gt;src_width - p-&gt;x;
+				p-&gt;dst_height = *ph = p-&gt;src_height - p-&gt;y;
+			}
+		} else {
+			/**scaling mode: scalew, scaleh, dont care x,y,w,h */
+			if (scalew &gt; p-&gt;desc.Width || scaleh &gt; p-&gt;desc.Height) {
+				p-&gt;src_width = p-&gt;dst_width = *pw = p-&gt;desc.Width;;
+				p-&gt;src_height = p-&gt;dst_height = *ph = p-&gt;desc.Height;
+			} else {
+				p-&gt;src_width = p-&gt;dst_width = *pw = scalew;;
+				p-&gt;src_height = p-&gt;dst_height = *ph = scaleh;
+			}
+		}
+
+		/** shader resource view */
+		ZeroMemory(&amp;SRVDesc, sizeof(SRVDesc));
+		SRVDesc.Format = p-&gt;desc.Format;
+		SRVDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
+		SRVDesc.Texture2D.MipLevels = p-&gt;desc.MipLevels;
+
+		if (FAILED(p-&gt;d3d10Device1-&gt;CreateShaderResourceView(p-&gt;sharedTexture, &amp;SRVDesc, &amp;p-&gt;sharedResourceView))) {
+			fprintf(stderr, "Failed to CreateShaderResourceView!");
+			goto error;
+		}
+
+		/** offscreen render target and texture */
+		ZeroMemory(&amp;p-&gt;scaleDesc, sizeof(p-&gt;scaleDesc));
+		p-&gt;scaleDesc.Width = p-&gt;src_width;
+		p-&gt;scaleDesc.Height = p-&gt;src_height;
+		p-&gt;scaleDesc.MipLevels = 0;
+		p-&gt;scaleDesc.ArraySize = 1;
+		p-&gt;scaleDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+		p-&gt;scaleDesc.BindFlags = D3D10_BIND_SHADER_RESOURCE | D3D10_BIND_RENDER_TARGET;
+		p-&gt;scaleDesc.SampleDesc.Count = 1;
+		p-&gt;scaleDesc.Usage = D3D10_USAGE_DEFAULT;
+
+		if (FAILED(p-&gt;d3d10Device1-&gt;CreateTexture2D(&amp;p-&gt;scaleDesc, NULL, &amp;p-&gt;scaleTexture))) {
+			fprintf(stderr, "CreateTexture2D failed\n");
+			goto error;
+		}
+
+		if (FAILED(p-&gt;d3d10Device1-&gt;CreateRenderTargetView(p-&gt;scaleTexture, NULL, &amp;p-&gt;scaleTarget))) {
+			fprintf(stderr, "CreateRenderTargetView failed\n");
+			goto error;
+		}
+
+		p-&gt;d3d10Device1-&gt;OMSetRenderTargets(1, &amp;p-&gt;scaleTarget, 0);
+
+		/** viewport */
+		ZeroMemory(&amp;viewport, sizeof(viewport));
+		viewport.Width = p-&gt;src_width;
+		viewport.Height = p-&gt;src_height;
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
+		viewport.TopLeftX = 0.0f;
+		viewport.TopLeftY = 0.0f;
+		p-&gt;d3d10Device1-&gt;RSSetViewports(1, &amp;viewport);
+
+		/** scaling texture */
+		ZeroMemory(&amp;copyDesc, sizeof(copyDesc));
+		copyDesc.Width = p-&gt;src_width;
+		copyDesc.Height = p-&gt;src_height;
+		copyDesc.MipLevels = 0;
+		copyDesc.ArraySize = 1;
+		copyDesc.Format = p-&gt;scaleDesc.Format;
+		copyDesc.BindFlags = 0;
+		copyDesc.SampleDesc.Count = 1;
+		copyDesc.Usage = D3D10_USAGE_STAGING;
+		copyDesc.CPUAccessFlags = D3D10_CPU_ACCESS_READ;
+
+	if (d3dcaplib_10_check_support_fmt(copyDesc.Format)) {
+		fprintf(stderr, "unsupport DXGI_FORMAT of %d. only support R8G8B8X?8_???? and B8G8R8?8_????\n", DXGetErrorStringA(hRet));
+		goto error;
+	}
+
+	if (FAILED(p-&gt;d3d10Device1-&gt;CreateTexture2D(&amp;copyDesc, NULL, &amp;p-&gt;copyTexture))) {
+		fprintf(stderr, "failed to create cpu texture 2D \n");
+		goto error;
+	}
+
+	/** Load shader and set shader variables */
+	if (d3dcaplib_10_load_shader(p)) {
+		fprintf(stderr, "failed to create shader\n");
+		goto error;
+	}
+
+	*h = p;
+	return 0;
+error:
+	d3dcaplib_10_close(p);
+	return -1;
+}
+
+int d3dcaplib_10_capture(d3dcaphnd_t h, UINT8 *dst, MutexIPC *mutex)
+{
+	d3dcaplib_10 *p = (d3dcaplib_10*)h;
+	D3D10_MAPPED_TEXTURE2D mappedTex = { 0 };
+	D3D10_TECHNIQUE_DESC techDesc;
+	int i;
+	int rowPitch;
+	BYTE *src;
+
+	if (!p) {
+		goto error;
+	}
+
+	/** gpu scaling */
+		p-&gt;scaleTechique-&gt;GetDesc(&amp;techDesc);
+
+		for (i = 0; i &lt; techDesc.Passes; ++i) {
+			p-&gt;scaleTechique-&gt;GetPassByIndex(i)-&gt;Apply(0);
+			p-&gt;d3d10Device1-&gt;Draw(6, 0);
+		}
+		p-&gt;d3d10Device1-&gt;Flush();
+
+		p-&gt;d3d10Device1-&gt;CopyResource(p-&gt;copyTexture, p-&gt;scaleTexture);
+
+		if (FAILED(p-&gt;copyTexture-&gt;Map(D3D10CalcSubresource(0, 0, 1), D3D10_MAP_READ, 0, &amp;mappedTex))) {
+			fprintf(stderr, "failed to map copyTexture\n");
+			goto error;
+		}
+
+		firefly_yuv444toyuv420_sse2(p-&gt;x, p-&gt;y, p-&gt;dst_width, p-&gt;dst_height, (BYTE*)mappedTex.pData, dst, mappedTex.RowPitch);
+
+		p-&gt;copyTexture-&gt;Unmap(D3D10CalcSubresource(0, 0, 1));
+
+	return 0;
+error:
+	return -1;
+}
+
+int d3dcaplib_10_close(d3dcaphnd_t h)
+{
+	d3dcaplib_10 *p = (d3dcaplib_10*)h;
+
+	if (!p) {
+		return -1;
+	}
+
+	if (p-&gt;scaleTarget) {
+		p-&gt;scaleTarget-&gt;Release();
+		p-&gt;scaleTarget = NULL;
+	}
+
+	if (p-&gt;scaleTexture) {
+		p-&gt;scaleTexture-&gt;Release();
+		p-&gt;scaleTexture = NULL;
+	}
+
+	if (p-&gt;scaleEffect) {
+		p-&gt;scaleEffect-&gt;Release();
+		p-&gt;scaleEffect = NULL;
+	}
+
+	if (p-&gt;scaleInputlayout) {
+		p-&gt;scaleInputlayout-&gt;Release();
+		p-&gt;scaleInputlayout = NULL;
+	}
+
+	if (p-&gt;scaleVertexBuffer) {
+		p-&gt;scaleVertexBuffer-&gt;Release();
+		p-&gt;scaleVertexBuffer = NULL;
+	}
+
+	if (p-&gt;sharedResourceView) {
+		p-&gt;sharedResourceView-&gt;Release();
+		p-&gt;sharedResourceView = NULL;
+	}
+
+	if (p-&gt;sharedTexture) {
+		p-&gt;sharedTexture-&gt;Release();
+		p-&gt;sharedTexture = NULL;
+	}
+
+	if (p-&gt;copyTexture) {
+		p-&gt;copyTexture-&gt;Release();
+		p-&gt;copyTexture = NULL;
+	}
+
+	if (p-&gt;d3d10Device1) {
+		p-&gt;d3d10Device1-&gt;Release();
+		p-&gt;d3d10Device1 = NULL;
+	}
+
+	free(p);
+	return 0;
+}
+
+/**
+ * helper.c
+ */
+
+/**
+ *			from
+ *
+ *		src1 = B1G1R1A1 B2G2R2A2 B3G3R3A3 B4G4R4A4
+ *		src2 = B5G5R5A5 B6G6R6A6 B7G7R7A7 B888R8A4
+ *
+ *			to
+ *
+ *		y32_1 = R1R2R3R4
+ *		y32_2 = R5R6R7R8
+ *		u16 = G1' G2'
+ *		v16 = B1' B2'
+ *
+ * 			and assume
+ *
+ *		G1' = (G1+G2+G5+G6)/4
+ *		G2' = (G3+G4+G7+G8)/4
+ *		B1' = (B1+B2+B3+B4)/4
+ *		B2' = (B3+B4+B7+B8)/4
+ */
+void firefly_yuv444toyuv420_sse2(
+	int startx, int starty, int dstw, int dsth, BYTE *src, BYTE *dst, int src_pitch)
+{
+	int x, y;
+	int endy = starty + dsth;
+	int endx = startx + dstw;
+	int owh = dstw*dsth;
+	int oy32_width = dstw / 4;
+	int src_pitch32 = src_pitch / 4;
+	UINT32 *prgb32 = (UINT32*)src;
+	UINT32 *rgba32 = (UINT32*)src;
+	UINT32 *rgba32_1 = rgba32 + src_pitch32;
+
+	UINT32 *oy32 = (UINT32*)dst;
+	UINT32 *oy32_1 = oy32 + oy32_width;
+	UINT16 *u16 = (UINT16*)(dst + owh);
+	UINT16 *v16 = (UINT16*)(dst + owh + owh / 4);
+
+	__m128i ymask = _mm_set1_epi32(0x00FF0000);
+	__m128i umask = _mm_set1_epi32(0x0000FF00);
+	__m128i vmask = _mm_set1_epi32(0x000000FF);
+	__m128i zero = _mm_setzero_si128();
+
+	for (y = starty; y &lt; endy; y += 2) {
+		for (x = startx; x &lt; endx; x += 4) {
+
+			rgba32 = prgb32 + y*src_pitch32 + x;
+			rgba32_1 = rgba32 + src_pitch32;
+
+			//_mm_prefetch((const char *)(rgba32 + 4), _MM_HINT_NTA);		//doesnt help on this case.
+			//_mm_prefetch((const char *)(rgba32_1 + 4), _MM_HINT_NTA);
+
+			__m128i line0 = _mm_load_si128((__m128i*)rgba32);		//AARRBBGG AARRBBGG AARRBBGG AARRBBGG
+			__m128i line1 = _mm_load_si128((__m128i*)rgba32_1);		//AARRBBGG AARRBBGG AARRBBGG AARRBBGG
+
+			__m128i y0 = _mm_and_si128(line0, ymask);				//00RR0000 00RR0000 00RR0000 00RR0000
+			y0 = _mm_srli_si128(y0, 2);								//000000RR 000000RR 000000RR 000000RR
+			y0 = _mm_packs_epi32(y0, zero);							//00000000 00000000 00RR00RR 00RR00RR
+			y0 = _mm_packus_epi16(y0, zero);						//00000000 00000000 00000000 RRRRRRRR
+
+			__m128i y1 = _mm_and_si128(line1, ymask);				//00RR0000 00RR0000 00RR0000 00RR0000
+			y1 = _mm_srli_si128(y1, 2);								//000000RR 000000RR 000000RR 000000RR
+			y1 = _mm_packs_epi32(y1, zero);							//00000000 00000000 00RR00RR 00RR00RR
+			y1 = _mm_packus_epi16(y1, zero);						//00000000 00000000 00000000 RRRRRRRR
+
+			__m128i u0 = _mm_and_si128(line0, umask);				//0000BB00 0000BB00 0000BB00 0000BB00
+			u0 = _mm_srli_si128(u0, 1);								//000000BB 000000BB 000000BB 000000BB
+			__m128i v0 = _mm_and_si128(line0, vmask);				//000000GG 000000GG 000000GG 000000GG
+			u0 = _mm_packs_epi32(u0, v0);							//00GG00GG 00GG00GG 00BB00BB 00BB00BB
+
+			__m128i u1 = _mm_and_si128(line1, umask);				//0000BB00 0000BB00 0000BB00 0000BB00
+			u1 = _mm_srli_si128(u1, 1);								//000000BB 000000BB 000000BB 000000BB
+			__m128i v1 = _mm_and_si128(line1, vmask);				//000000GG 000000GG 000000GG 000000GG
+			u1 = _mm_packs_epi32(u1, v1);							//00GG00GG 00GG00GG 00BB00BB 00BB00BB
+
+			u0 = _mm_avg_epu16(u0, u1);								//00GG00GG 00GG00GG 00BB00BB 00BB00BB
+			u0 = _mm_hadd_epi16(u0, zero);							//00000000 00000000 00GG00GG 00BB00BB
+			u0 = _mm_srli_epi16(u0, 1);								//00000000 00000000 00GG00GG 00BB00BB
+			u0 = _mm_packus_epi16(u0, zero);						//00000000 00000000 00000000 GGGGBBBB
+			v0 = _mm_srli_si128(u0, 2);								//00000000 00000000 00000000 0000GGGG
+
+			*oy32 = _mm_cvtsi128_si32(y0);
+			*oy32_1 = _mm_cvtsi128_si32(y1);
+			*u16 = (UINT16)(_mm_cvtsi128_si32(u0) &amp; 0xFFFF);
+			*v16 = (UINT16)(_mm_cvtsi128_si32(v0) &amp; 0xFFFF);
+
+			oy32++;
+			oy32_1++;
+			*u16++;
+			*v16++;
+		}
+		oy32 += oy32_width;
+		oy32_1 += oy32_width;
+	}
+}
+
+/**
+ * shader: rgb2yuv.fx
+ */
+
+Texture2D tex : register(t0);
+float4x4 rgb2yuvMat: register(s0);
+int height : register(t2);
+
+SamplerState texSampler  {
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+
+struct VS_Input
+{
+	float4 pos  : POSITION;
+	float2 tex0 : TEXCOORD0;
+};
+
+struct PS_Input
+{
+	float4 pos  : SV_POSITION;
+	float2 tex0 : TEXCOORD0;
+};
+
+PS_Input VS_Main(VS_Input input)
+{
+	PS_Input output = (PS_Input)0;
+	output.pos = input.pos;
+	output.tex0 = input.tex0;
+	return output;
+}
+
+float4 PS_Main(PS_Input input) : SV_TARGET
+{
+	float4 rgba;
+	float2 texCoord = input.tex0;
+	float2 adjust = float2(1, 1);
+
+	texCoord.y = height - texCoord.y;
+	rgba.rgb = tex.Sample(texSampler, texCoord);
+	rgba.a = 1.0;
+
+	float4 yuvx = mul(float4(rgba.rgb, 1.0), rgb2yuvMat);
+	return float4(saturate(yuvx.xyz), rgba.a);
+}
+
+technique10 rgb2yuv
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_4_0, VS_Main()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_4_0, PS_Main()));
+	}
+}</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
