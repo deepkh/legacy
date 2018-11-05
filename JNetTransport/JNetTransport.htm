@@ -1,0 +1,288 @@
+<html><head><title>Pattern 2</title>
+<style type="text/css">
+body {
+    background-color: #aaa;
+    font-family: Verdana, Bitstream Vera Sans, PMingLiu, ·s²Ó©úÅé, sans-serif;
+    margin:0;
+    padding:0;
+    position: relative;
+    }
+
+div#top {
+    margin:0;
+    /*border-bottom:1px solid #444;*/
+    background-color: #ddd;
+    width: 100%;
+    }
+div#top #block {
+    }
+
+div#top #block #title {
+    font-size: 24px;
+    font-weight: 800;
+    border:1px solid #999;
+    width: 25%;
+    color: #ccc;
+    background-color: #fff;
+}
+
+div#top #shadow {
+    position: absolute;
+    top: 1px;
+    left: 20px;
+    font-size: 24px;
+    font-weight: 800;
+    color: #ccc;
+    border-bottom:3px solid #ccc;
+}
+
+div#top #shadow2 {
+    position: absolute;
+    top: 4px;
+    left: 43px;
+    font-size: 31px;
+    font-weight: 800;
+    color: #333;
+    border-bottom:2px solid #444;
+}
+
+div#top #shadow3 {
+    position: absolute;
+    top: 6px;
+    left: 14px;
+    font-size: 30px;
+    font-weight: 800;
+    color: #ccc;
+    border-bottom:2px solid #444;
+}
+
+span#left {
+    float: left;
+    margin:0;
+    width: 20%;
+    }
+div#navigate {
+    width: 100%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border-top:4px solid #444;
+    border-right:1px solid #444;
+    border-bottom:4px solid #444;
+    background-color: #fff;
+    }
+
+div#navigate #block {
+    padding-left: 4px;
+    padding-right: 4px;
+    }
+
+div#navigate #block #subject {
+    border-top:1px dashed #444;
+    border-bottom:1px dashed #444;
+    background-color: #eee;
+    font-weight: 800;
+    font-size: 16px;
+    margin-top: 1em;
+}
+
+div#navigate #block #menuitem {
+    font-size: 12px;
+    margin-bottom: 1em;
+}
+
+div#navigate #block #menutime {
+    font-size: 12px;
+    font-style: italic;
+    color: #999;
+    text-align: right;
+}
+
+div#author {
+    float: right;
+    width: 40%;
+    margin-left: 2em;
+    margin-top: 1em;
+    border: 1px dashed #aaa;
+    background-color: #eeeeee;
+    font-size: 12px;
+}
+
+span#right {
+    float: right;
+
+}
+div#content {
+    width: 100%;
+    margin: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border-top:4px solid #444;
+    border-left:1px solid #444;
+    border-right:1px solid #444;
+    border-bottom:4px solid #444;
+    background-color: #fff;
+    }
+div#content #block {
+    margin:10px;
+    padding-top:10px;
+    padding-left:5px;
+    padding-right:5px;
+    border:1px dashed #444;
+}
+
+div#content #block #subject {
+    border-top: 1px dashed #444;
+    border-bottom: 1px dashed #444;
+    font-size: 20px;
+    font-weight: 600;
+    background-color: #eee;
+}
+
+div#content #block p {
+    font-size: 12px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div#content #block h3 {
+    margin: 0;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #999;
+    }
+
+li {
+    font-size:12px;
+}
+
+div#bottom {
+    clear: both;
+    width: 100%;
+    margin:0;
+    border-top:1px solid #444;
+    background-color: #fff;
+    }
+div#bottom #copyleft {
+    margin-top: 0;
+    text-align: center;
+    }
+
+</style>
+</head>
+<body>
+    <div id="top">
+	<div id="block">
+	    <div id="title">KENJI's BLOG</div>
+	</div>
+	<div id="shadow2">KENJI's BLOG</div>
+    </div>
+
+    
+    <span id="right">
+	<div id="content">
+	    <div id="block">
+		<div id="subject">
+		    JNetTransport v1.0
+		</div>
+		<div id="author">
+		    «~¦W¡GJNetTransport<BR>
+		    §@ªÌ¡Gdeepkh (deepkh@ziwen.no-ip.biz)<BR>
+		    ª©Åv¡G<a href=http://www.gnu.org/licenses/gpl.html#TOC1>GPL</a><BR>
+		    ¤é´Á¡G2004-04-20<BR>
+		    &nbsp; &nbsp; &nbsp; &nbsp; <a href=JNetTransport.jar>Download</a>&nbsp;&nbsp;<a href=show.png>Screenshot</a>&nbsp;&nbsp;<a href=JNetTransport_zh_TW.png>zh_TW</a>&nbsp;&nbsp;<a href=JNetTransport_zh_CN.png>zh_CN</a>
+		</div>
+		<h3>Ãö©ó³o­Ó³¾ ...</h3>
+		<p>³o¬O¤@¤ä«Øºc©ó Java Swing UI ¤W°Ñ·Ó Hyper Text Transfer Protocol 1.0 ªºÀÉ®×¤U¸üµ{¦¡¡A¥~Æ[¥é·Ó NetTransport¡A¥\¯à¤j­P©M Flash Get ¬Û¥é¡A¥Ø «e¶È¤ä´© Http ³q°T¨ó©w¡C</p>
+		<h3>¥D­n¯SÂI</h3>
+		<ul>
+		    <li>³ë®É®É¶¡¶¡®æ (Timeout)</li>
+		    <li>½w½Ä¤j¤p (Buffer Size)</li>
+		    <li>¦h°õ¦æºü»P±Æµ{ (Multi-Thread & Task Manage)</li>
+		    <li>¸ó JVM ¥­¥x¡A¤ä´© Win32 »P Linux ¥­¥x</li>
+		    <li>¥¿³Wªí¥Üªk¨Ó§ì¨úºô§}¸ÌªºÀÉ®× (Regular Express Grab)</li>
+		</ul>
+		</p>
+		<h3>³ë®É®É¶¡¶¡®æ(Timeout)</h3>
+		<p>¥i¥H³]©w»P¦øªA¾¹¤T¤â¥æ´¤(3-hands-shake)ªº®É¶¡¡A¶W¹L®É¶¡­«·s³s½u¡A¥i¥H ­É¥Ñ§ïµ½³s½u®É¶¡¡A¦p¡Ghinet ªÅ¶¡¡BGiga ªÅ¶¡¥i¥H«Ü§Öªº¨ì¹F³q°T¨ó©w¼h¡C ³o¤@³¡¥÷¤]¬O¿E°_§Ú¼g¤@­Ó Http Transport ªº¨M¤ß¡C³Ì¤jªº§Ö¼Ö¡A²ö¹L©ó±Ä¥Î ³æ¦ì 100 ²@¬íªº re-connection Giga ¦øªA¾¹¤F¡C
+³æ¦ì¬O²@¬í¡A°O¾ÐÅé©w§}½d³ò 32 bit</p>
+		<h3>½w½Ä¤j¤p(buffer size)</h3>
+		<p> ³o¬O§Ú³Ì³ßÅwªº¤@³¡¥÷¤F¡A¸g±`¤U¸ü¦hÀÉªº¤H³£ª¾¹D¡A·í ADSL ¥þ¶}®É¡A´N¬Oµw ºÐ¨¯³Òªº¶}©l¡A¥Î³o­Ó¥i¥H§ïµ½»PµwºÐ¼g¤J¦¸¼Æªº´î¤Ö¡A®³°O¾ÐÅé·í½w½Ä¡Aµ¥¨ì ¤F½w½Ä¤j¤p®É¦A¼g¦^µwºÐ¡A¥i¥H§ïµ½¤£¤Ö®Ä²v»P©µªøµwºÐ¹Ø©R¡C¯ÊÂI¬O³]¤Ó¤j®É ®e©ö³y¦¨ out of memory ªº±¡§Î¡C
+·í¦ì¬O¦ì¤¸²Õ(byte)¡A°O¾ÐÅé©w§}½d³ò 32 bit</p>
+		<h3>¦h°õ¦æºü»P±Æµ{ (Multi-Thread & Task Manage)</h3>
+		<p> ¼g³o¤@³¡¥÷«Ü§Ö¼Ö¡A¦]¬°´o¤Hªº¦h½uµ{µ{¦¡³]­p¡A¦b Java ¤¤¥H³Q³B²zªº«Üºë²Ó ¤F¡A¤ñ¸û­nª`·Nªº¬O¦P³¡(synchronized)¨ú¥Îª«¥óªº¤è­±¡A­É¥Ñ wait¡Bnotify »P synchronized ¥i¥H«Ü®e©öªº¹F¨ì±Æµ{ªº®ÄªG¡A¦¨´N¥i¥H«Ü§Öªº±o¨ì¡A¦ý¬O¤@ ¤£¤p¤ß¤]«Ü®e©ö±¼¨ì die lock ªºµL©³²`²W¸Ì¡A¬ÝµÛ»{¬°Â²³æ¦n¥Î¦¨´N¤jªº¦P³¡ ¾÷¨î¡A¥¦¥é¦òÅÑÅÑªº¦b¤º¤ß¦l¯ºµÛ¡D¡D¡D(¨þ¨þ¨þ)¡C</p>
+		<h3>¥¿³Wªí¥Üªk¨Ó§ì¨úºô§}¸ÌªºÀÉ®× (Regular Express Grab)</h3>
+		<p>¬OÃB¥~ªþ¥[¤W¨Óªº¡A¥Î RE §ì¨úºô§}¸Ìªº§k¦XªºÀÉ®×</p>
+		<h3>¨ä¥¦...¤p»y¿ý</h3>
+		<p>¤£¦n·N«ä¡A¦]¬°®É¶¡°ÝÃD¡A¨S¦³®É¶¡¦A¥´µ{¦¡½X»¡©ú¡A¤£¹L§Ú¦³¥Î¤âÃ¸ªºµ{¦¡ ¬[ºc¹Ï¡A¤W½Ò®É¦A»P±z¤À¨É¡Aµ{¦¡½X»P¦ì¤¸½X³£¦b JNetTransport.jar¸Ì¡A¥¦ ¥»¨­¤]¥i¥H¥Î java -jar JNetTransport.jar ªº¤è¦¡°õ¦æ¡C</p><BR>
+		<p>ÁÙ¦³¤@ÂI§Ñ¤F»¡©ú¡A³o°¦µ{¦¡¦A³]­p¤§«á¦³¥[¤J¦h°ê»y¨¥ªº³]­p¡A¥Ø«e¥u¦³­^»y ¥¿Åé¤¤¤å»PÂ²Åé¤¤¤å»y¨¥¥]¡A§¡¦b transget/swing/resources ¸ê®Æ§¨¤U¡C</p>
+	    </div>
+	</div>
+    </span>
+    <!--
+    <span id="left">
+	<div id="navigate">
+	    <div id="block">
+		<div id="subject">
+		    Java Section
+		</div>
+		<div id="menuitem">
+		    ¡ÀJN › !-!HetTransport Beta v1.0<BR>
+		    <div id="menutime">(Kenji - May 5 12:13)</div>
+		    ¡ÀJTransfer Release Stauts<BR>
+		    <div id="menutime">(Kenji - May 5 12:13)</div>
+		</div>
+	    </div>
+	    <div id="block">
+		<div id="subject">
+		    Mild Section
+		</div>
+		<div id="menuitem">
+		    ¡ó¥Í©R¬O«Ü¯«©_ºw
+		    <div id="menutime">(Kenji - May 5 12:13)</div>
+		    ¡ò¥Í©Rºw¯u¿Í
+		    <div id="menutime">(Kenji - May 12 03:49)</div>
+		    ¡°·R¤W¤@°}ºÆ Â_¹³¤@³õªÅ
+		    <div id="menutime">(Kenji - May 12 03:49)</div>
+		</div>
+	    </div>
+	    <div id="block">
+		<div id="subject">
+		    Linux Skill
+		</div>
+		<div id="menuitem">
+		    ¡°Gaim µLµh¦w¸Ëªk
+		    <div id="menutime">(Kenji - May 12 03:49)</div>
+		    ¡°Mozilla ¤â¤u¥´³yªk
+		    <div id="menutime">(Kenji - May 12 03:49)</div>
+		    ¡°Gentoo ³Æ¥÷ÀÉ
+		    <div id="menutime">(Kenji - May 12 03:49)</div>
+		</div>
+	    </div>
+	    <div id="block">
+		<div id="subject">
+		    Mild Section
+		</div>
+	    </div>
+	    <div id="block">
+		<div id="subject">
+		    Mild Section
+		</div>
+	    </div>
+	    <div id="block">
+		<div id="subject">
+		    Mild Section
+		</div>
+	    </div>
+	</div>
+    </span>
+    -->
+    <div id="bottom">
+	<div id="copyleft">
+	    Here's a copyleft declaration
+	</div>
+    </div>
+
+</body>
+</html>
+

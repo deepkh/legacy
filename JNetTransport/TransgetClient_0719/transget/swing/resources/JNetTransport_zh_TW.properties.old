@@ -1,0 +1,110 @@
+# Global
+title=JNetTransport
+version=20040628
+author=deepkh (deepkh@ziwen.no-ip.biz)
+
+# Menu Bar
+menubar.file=\u6a94\u6848
+menubar.mission=\u4efb\u52d9
+menubar.theme=\u5916\u89c0\u611f\u89ba
+menubar.other=\u5176\u5b83
+
+# Action
+start=\u958b\u59cb
+stop=\u505c\u6b62
+startAll=\u5168\u90e8\u958b\u59cb
+stopAll=\u5168\u90e8\u505c\u6b62
+remove=\u79fb\u9664\u4efb\u52d9
+removefile=\u522a\u9664\u6a94\u6848
+removefileseed=\u79fb\u9664\u4efb\u52d9\u548c\u6a94\u6848
+edit=\u5167\u5bb9
+single=\u65b0\u618e\u4efb\u52d9
+multi=\u591a\u884c\u4efb\u52d9
+option=\u9810\u8a2d
+about=\u95dc\u65bc
+exit=\u96e2\u958b
+removefinish=\u79fb\u9664\u5b8c\u6210\u4efb\u52d9
+set2zero=\u898f\u96f6
+set2zeroremove=\u79fb\u9664\u6a94\u6848\u4e26\u6b78\u96f6
+seterrfile2zero=\u6b78\u96f6\u932f\u8aa4\u4e0b\u8f09
+seterrfile2zeroremove=\u79fb\u9664\u6a94\u6848\u4e26\u6b78\u96f6\u932f\u8aa4\u4e0b\u8f09
+
+
+# Action Icon
+start.icon=start.gif
+stop.icon=stop.gif
+startAll.icon=start.gif
+stopAll.icon=stop.gif
+remove.icon=remove.gif
+removefile.icon=remove.gif
+removefileseed.icon=removeall.gif
+edit.icon=edit.gif
+single.icon=single.gif
+multi.icon=multi.gif
+option.icon=option.gif
+about.icon=about.gif
+exit.icon=exit.gif
+
+# Table Label
+table.name=\u540d\u7a31
+table.size=\u5927\u5c0f
+table.complete=\u5b8c\u6210
+table.percent=\u767e\u5206\u6bd4
+table.costtime=\u82b1\u8cbb
+table.timeleft=\u5269\u9918
+table.speed=\u901f\u5ea6
+table.start.icon=table/connected.png
+table.pause.icon=table/pause.png
+table.queue.icon=table/queue.png
+table.partial.icon=table/partial.png
+table.finish.icon=table/finish.png
+
+# Log Table
+logtable.time=\u6642\u9593
+logtable.note=\u8aaa\u660e
+
+# Label of preferences
+preferences=\u5c6c\u6027
+save=\u5132\u5b58\u76ee\u9304
+buffer=\u7de9\u885d\u5927\u5c0f
+delay=\u5ef6\u9072\u6642\u9593
+stream=\u4e32\u6d41\u6578\u76ee
+retry=\u91cd\u8a66
+hand=\u624b\u52d5
+queue=\u6392\u7a0b
+
+bytes=\u4f4d\u5143\u7d44
+times=\u6b21
+millis=\u6beb\u79d2
+
+# button
+okay=\u5b8c\u6210
+okay.icon=button/ok.png
+cancel=\u53d6\u6d88
+cancel.icon=button/cancel.png
+clear=\u6e05\u9664
+clear.icon=button/clear.png
+paste=\u8cbc\u4e0a
+paste.icon=button/paste.png
+update=\u66f4\u65b0
+update.icon=button/update.png
+browser=...
+browser.icon=button/open.png
+
+# single
+single.title=\u65b0\u589e\u4e0b\u8f09
+single.url=\u7db2\u5740
+single.referer=\u53c3\u7167
+single.filename=\u6a94\u540d
+
+# multi
+multi.title=\u591a\u884c\u4e0b\u8f09
+
+# about
+about.title=\u95dc\u65bc JNetTransport V1.2
+about.okay=\u6211\u8b80\u5b8c\u4e86
+about.context=Author: deepkh (deepkh@ziwen.no-ip.biz)\nDate: 2004-06-28\nCopyright: GPL
+
+# Properties
+properties.title=\u5c6c\u6027\u8a2d\u5b9a
+
