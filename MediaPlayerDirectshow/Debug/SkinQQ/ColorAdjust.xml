@@ -1,0 +1,198 @@
+﻿<theme version="1.0"  >
+	<manifest name="default" folder="color" author="tencent" description="QQ2009"  
+	  link="http://www.qq.com/" email=""   language="zh-cn"/>
+<dsimage>
+   <image id="color001.nor" value="colour_001.bmp"  canadjust="false"/>
+   <image id="color001.over" value="colour_001highlight.bmp" canadjust="false"/>
+   
+   <image id="color002.nor" value="colour_002.bmp" canadjust="false"/>
+   <image id="color002.over" value="colour_002highlight.bmp" canadjust="false"/>
+   
+   <image id="color003.nor" value="colour_003.bmp" canadjust="false"/>
+   <image id="color003.over" value="colour_003highlight.bmp" canadjust="false"/>
+   
+   <image id="color004.nor" value="colour_004.bmp" canadjust="false"/>
+   <image id="color004.over" value="colour_004highlight.bmp" canadjust="false"/>
+   
+   <image id="color005.nor" value="colour_005.bmp" canadjust="false"/>
+   <image id="color005.over" value="colour_005highlight.bmp" canadjust="false"/>
+   
+   <image id="color006.nor" value="colour_006.bmp" canadjust="false"/>
+   <image id="color006.over" value="colour_006highlight.bmp" canadjust="false"/>
+   
+   <image id="color007.nor" value="colour_007.bmp" canadjust="false"/>
+   <image id="color007.over" value="colour_007highlight.bmp" canadjust="false"/>
+   
+   <image id="color008.nor" value="colour_008.bmp" canadjust="false"/>
+   <image id="color008.over" value="colour_008highlight.bmp" canadjust="false"/>
+   
+   <image id="colorbtn" value="colour.png" canadjust="false"/>
+   
+   <image id="shading1.nor"  value="Normal_1.png" canadjust="false"/>
+   <image id="shading1.over" value="MouseOver_1.png" canadjust="false"/>
+   
+   <image id="shading2.nor"  value="Normal_2.png" canadjust="false"/>
+   <image id="shading2.over" value="MouseOver_2.png" canadjust="false"/>
+   
+   <image id="shading3.nor"  value="Normal_3.png" canadjust="false"/>
+   <image id="shading3.over" value="MouseOver_3.png" canadjust="false"/>
+   
+   <image id="shading4.nor"  value="Normal_4.png" canadjust="false"/>
+   <image id="shading4.over" value="MouseOver_4.png" canadjust="false"/>
+   
+   <image id="shading5.nor"  value="Normal_5.png" canadjust="false"/>
+   <image id="shading5.over" value="MouseOver_5.png" canadjust="false"/>
+   
+   <image id="shading6.nor"  value="Normal_6.png" canadjust="false"/>
+   <image id="shading6.over" value="MouseOver_6.png" canadjust="false"/>
+   
+   <image id="maindlg.bk.shading1" 	     value="BKG_top_1.png"/>
+   <image id="maindlg.bk.shading.bottom1"	 value="BKG_bottom_1.png"/>
+   <image id="maindlg.bk.shading2" 			 value="BKG_top_2.png"/>
+   <image id="maindlg.bk.shading.bottom2"	 value="BKG_bottom_2.png"/>
+   <image id="maindlg.bk.shading3" 			 value="BKG_top_3.png"/>
+   <image id="maindlg.bk.shading.bottom3"	 value="BKG_bottom_3.png"/>
+   <image id="maindlg.bk.shading4" 			 value="BKG_top_4.png"/>
+   <image id="maindlg.bk.shading.bottom4"	 value="BKG_bottom_4.png"/>
+   <image id="maindlg.bk.shading5" 			 value="BKG_top_5.png"/>
+   <image id="maindlg.bk.shading.bottom5"	 value="BKG_bottom_5.png"/>
+   <image id="maindlg.bk.shading6" 			 value="BKG_top_6.png"/>
+   <image id="maindlg.bk.shading.bottom6"	 value="BKG_bottom_6.png"/>
+  
+</dsimage>
+
+<dswindow>
+	<window name="colorbtn" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="true"/>
+	   <buttoninfo subtype="push" width="20" height="20"/>
+	   
+	   <image state = "down"     picfile="#maindlg.iconbtn.down"  paintmode="stretchparthorz" left_part="3"  right_part="3"/>
+	   <image state = "over"     picfile="#maindlg.iconbtn.hot"  paintmode="stretchparthorz" left_part="3"  right_part="3"/>
+	   <image state = "all"  picfile="#colorbtn"  left="1" top="1"  width="18" height="18" />
+	</window>
+	
+	<window name="colorbutton1" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="18" height="18"/>
+	   <image state = "normal"  picfile="#color001.nor"   width="18" height="18" />
+	   <image state = "over"    picfile="#color001.over"  width="18" height="18" />
+       <image state = "down"    picfile="#color001.over"  width="18" height="18"/>
+	</window>
+	
+	<window name="colorbutton2" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="18" height="18"/>
+	   <image state = "normal"  picfile="#color002.nor"   width="18" height="18" />
+	   <image state = "over"    picfile="#color002.over"  width="18" height="18" />
+       <image state = "down"    picfile="#color002.over"  width="18" height="18"/>
+	</window>
+	
+	<window name="colorbutton3" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="18" height="18"/>
+	   <image state = "normal"  picfile="#color003.nor"   width="18" height="18" />
+	   <image state = "over"    picfile="#color003.over"  width="18" height="18" />
+       <image state = "down"    picfile="#color003.over"  width="18" height="18"/>
+	</window>	
+	
+	
+	<window name="colorbutton4" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="18" height="18"/>
+	   <image state = "normal"  picfile="#color004.nor"   width="18" height="18" />
+	   <image state = "over"    picfile="#color004.over"  width="18" height="18" />
+       <image state = "down"    picfile="#color004.over"  width="18" height="18"/>
+	</window>	
+	
+	<window name="colorbutton5" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="18" height="18"/>
+	   <image state = "normal"  picfile="#color005.nor"   width="18" height="18" />
+	   <image state = "over"    picfile="#color005.over"  width="18" height="18" />
+       <image state = "down"    picfile="#color005.over"  width="18" height="18"/>
+	</window>	
+	
+	<window name="colorbutton6" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="18" height="18"/>
+	   <image state = "normal"  picfile="#color006.nor"   width="18" height="18" />
+	   <image state = "over"    picfile="#color006.over"  width="18" height="18" />
+       <image state = "down"    picfile="#color006.over"  width="18" height="18"/>
+	</window>	
+	
+	<window name="colorbutton7" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="18" height="18"/>
+	   <image state = "normal"  picfile="#color007.nor"   width="18" height="18" />
+	   <image state = "over"    picfile="#color007.over"  width="18" height="18" />
+       <image state = "down"    picfile="#color007.over"  width="18" height="18"/>
+	</window>	
+	
+	<window name="colorbutton8" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="18" height="18"/>
+	   <image state = "normal"  picfile="#color008.nor"   width="18" height="18" />
+	   <image state = "over"    picfile="#color008.over"  width="18" height="18" />
+       <image state = "down"    picfile="#color008.over"  width="18" height="18"/>
+	</window>	
+	
+	
+	<window name="shadingbtn1" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="29" height="29"/>
+	   <image state = "normal"  picfile="#shading1.nor"   width="29" height="29" />
+	   <image state = "over"    picfile="#shading1.over"  width="29" height="29" />
+       <image state = "down"    picfile="#shading1.over"  width="29" height="29"/>
+	</window>
+	
+	<window name="shadingbtn2" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="29" height="29"/>
+	   <image state = "normal"  picfile="#shading2.nor"   width="29" height="29" />
+	   <image state = "over"    picfile="#shading2.over"  width="29" height="29" />
+       <image state = "down"    picfile="#shading2.over"  width="29" height="29"/>
+	</window>
+	
+	<window name="shadingbtn3" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="29" height="29"/>
+	   <image state = "normal"  picfile="#shading3.nor"   width="29" height="29" />
+	   <image state = "over"    picfile="#shading3.over"  width="29" height="29" />
+       <image state = "down"    picfile="#shading3.over"  width="29" height="29"/>
+	</window>
+	
+	
+	<window name="shadingbtn4" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="29" height="29"/>
+	   <image state = "normal"  picfile="#shading4.nor"   width="29" height="29" />
+	   <image state = "over"    picfile="#shading4.over"  width="29" height="29" />
+       <image state = "down"    picfile="#shading4.over"  width="29" height="29"/>
+	</window>
+	
+	<window name="shadingbtn5" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="29" height="29"/>
+	   <image state = "normal"  picfile="#shading5.nor"   width="29" height="29" />
+	   <image state = "over"    picfile="#shading5.over"  width="29" height="29" />
+       <image state = "down"    picfile="#shading5.over"  width="29" height="29"/>
+	</window>
+	
+	<window name="shadingbtn6" type="button">
+	   <property bclipwindow="true" tooltips="#default" btransparentbk="false"/>
+	   <buttoninfo subtype="push" width="29" height="29"/>
+	   <image state = "normal"  picfile="#shading6.nor"   width="29" height="29" />
+	   <image state = "over"    picfile="#shading6.over"  width="29" height="29" />
+       <image state = "down"    picfile="#shading6.over"  width="29" height="29"/>
+	</window>
+	
+	
+	<window name="colordialog" type="dialog">
+	   <dialoginfo captionheight="0"/>
+	   <rect   bordercolor="RGB(255,0,0)" fillcolor="RGB(235,247,255)" borderwidth="0" />
+	   <rect   bordercolor="RGB(25,85,95)" fillcolor="RGB(137,214,255)" borderwidth="2" style="hole"/>
+	</window>
+	
+</dswindow>	
+					
+</theme>

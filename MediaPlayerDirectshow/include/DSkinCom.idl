@@ -1,0 +1,49 @@
+// DSkinCom.idl : IDL source for DSkinCom
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (DSkinCom.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(F8839FB2-B1CC-4B8E-8F5B-D32AC267BC07),
+	dual,
+	nonextensible,
+	helpstring("IDskin Interface"),
+	pointer_default(unique)
+]
+interface IDskin : IDispatch{
+	[id(1), helpstring("method dsLoadSkin")] HRESULT LoadSkin(BSTR strSkinPath);
+	[id(2), helpstring("method dsExitSkin")] HRESULT ExitSkin(void);
+	[id(3), helpstring("method dsSkinWindow")] HRESULT SkinWindow([in] ULONG hwnd, [in] ULONG uCtrlType, [in] BSTR szXmlLabel, [in] BOOL bChildSkin);
+	[id(4), helpstring("method dsAdjustColor")] HRESULT AdjustColor([in] ULONG nHue, [in]ULONG nSaturation);
+	[id(5), helpstring("method dsEnableMenuNoBorder")] HRESULT EnableMenuNoBorder([in] BOOL bEable);
+	[id(6), helpstring("method dsGetLastError")] HRESULT GetLastError([in,out] ULONG* uErrorCode);
+	[id(7), helpstring("method dsTrackPopupMenu")] HRESULT TrackPopupMenu([in] ULONG hMenu, [in] ULONG uFlags, [in]ULONG x, [in]ULONG y, [in]ULONG hWnd);
+
+	[id(8), helpstring("method AddMenuBar")] HRESULT AddMenuBar([in]ULONG Hwnd, [in,out] ULONG* pToolBar, [in] ULONG hMenu, [in] BSTR strToolBarLabel, [in] BSTR strMenuLabel);
+	[id(9), helpstring("method GetIcon")] HRESULT GetIcon([in] BSTR strIconLabel, [in,out] ULONG* hIcon);
+	[id(10), helpstring("method GetColor")] HRESULT GetColor([in] BSTR strColorLabel, [in,out] ULONG* crValue);
+	[id(11), helpstring("method GetBitmap")] HRESULT GetBitmap([in] BSTR strBitmapLabel, [in,out] ULONG* hBitmap);
+	[id(12), helpstring("method GetFont")] HRESULT GetFont([in] BSTR strFontLabel, [in,out] ULONG* hFont);
+};
+[
+	uuid(ACA2E7CD-904D-44A9-93A0-B865AE486DE9),
+	version(1.0),
+	helpstring("DSkinCom 1.0 Type Library")
+]
+library DSkinComLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(13C32721-A4CB-4D57-A919-5AF9C82C37B2),
+		helpstring("Dskin Class")
+	]
+	coclass Dskin
+	{
+		[default] interface IDskin;
+	};
+};

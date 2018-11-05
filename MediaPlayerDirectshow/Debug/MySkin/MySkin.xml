@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<theme version="1.0"  >
+	<manifest name="default" folder="skin" 
+		author="heyyo" description="voip skin"  
+		link="http://www.heyyo.com" email=""   language="zh-tw"/>
+
+	<dsfont> 
+	  <font id="default" fontface="Tahoma" fontsize="11"/>
+	</dsfont>
+
+	<dscursor> //define the cursor used in skin
+	  <cursor id="handcur" value="hand.cur"/> 
+	</dscursor>
+
+	<dscolor> //define the color
+	  //  <color id="system_bg" value="RGB(255,255,255)"  canadjust="false"/>
+	</dscolor>
+
+
+<dsimage>
+   <image id="standard.main.ico" value="main.ico" iconwidth="16" iconheight="16"/>
+   <!--window background image-->
+   <image id="standard.window.topleft" value="DialogTopLeft.bmp" />
+   <image id="standard.window.topmid" value="DialogTopMid.bmp" />
+   <image id="standard.window.topright" value="DialogTopRight.bmp" />
+   <image id="standard.window.left" value="DialogLeft.bmp" />
+   <image id="standard.window.right" value="DialogRight.bmp" />
+   <image id="standard.window.bottomleft"  value="DialogBottomLeft.bmp" />
+   <image id="standard.window.bottommid"   value="DialogBottomMid.bmp" />
+   <image id="standard.window.bottomright" value="DialogBottomRight.bmp" />
+
+
+   <!--window system buttons image-->
+   <image id="standard.sysbtn.close.nor" value="sys_close_nor.bmp" />
+   <image id="standard.sysbtn.close.hot" value="sys_close_hot.bmp" />
+   <image id="standard.sysbtn.close.down" value="sys_close_down.bmp" />
+   
+   <image id="standard.sysbtn.min.nor" value="sys_min_nor.bmp" />
+   <image id="standard.sysbtn.min.hot" value="sys_min_hot.bmp" />
+   <image id="standard.sysbtn.min.down" value="sys_min_down.bmp" />
+
+
+   <!--windows slider control-->
+   <image id="stardard.slider.bg" value="slider\slider_background.bmp" transparentcolor="RGB(255,0,255)"/>
+   <image id="stardard.slider.fg" value="slider\slider_foreground.bmp" transparentcolor="RGB(255,0,255)"/>
+   <image id="stardard.slider.drag" value="slider\slider_dragBackground.png" />
+
+
+   
+     <!--window button control-->
+    <image id="stardard.button.nor" value="btn_normal.bmp" transparentcolor="RGB(255,0,255)"/>
+    <image id="stardard.button.hot" value="btn_hot.bmp" transparentcolor="RGB(255,0,255)"/>
+    <image id="stardard.button.down" value="btn_down.bmp" transparentcolor="RGB(255,0,255)"/>
+    <image id="stardard.button.disable" value="btn_disabled.bmp" transparentcolor="RGB(255,0,255)"/>
+    
+
+</dsimage>
+
+<dswindow>
+
+	<window name="static" type="static">
+	   <property  bkcolor="#system_bg" btransparentbk="true" />
+	   <text state="all" font="#default"  horzalign="left"  textcolor="RGB(0,0,0)"/>
+	</window>
+
+     <window name="button" type="button">
+      <property  tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push"   />
+      <image state="normal" picfile="#stardard.button.nor" paintmode="stretchpartall" left_part="5" right_part="5" top_part="5" bottom_part="5"/>
+      <image state="over" picfile="#stardard.button.hot"   paintmode="stretchpartall" left_part="5" right_part="5" top_part="5" bottom_part="5"/>
+      <image state="down" picfile="#stardard.button.down"  paintmode="stretchpartall" left_part="5" right_part="5" top_part="5" bottom_part="5"/>
+      <image state="disable" picfile="#stardard.button.dis" paintmode="stretchpartall" left_part="5" right_part="5" top_part="5" bottom_part="5"/>
+      <text state="all" font="#default" horzalign="center" bsingleline="true" textcolor="RGB(0,0,0)" />
+      <text state="all" font="#default" horzalign="center" bsingleline="true" textcolor="RGB(0,0,0)" />
+    </window>
+
+
+	<window name="sliderctrl" type="sliderctrl">
+	   <property  btransparentbk="true" />
+	   <image state="normal" picfile="#stardard.slider.drag"  />
+	   <image state="over" picfile="#stardard.slider.drag"  />
+	   <image state="down" picfile="#stardard.slider.drag"  />
+	   <image id="slider.bg"   state="non" picfile="#stardard.slider.bg" paintmode="stretchparthorz" left_part="10" right_part="10" />
+	</window>
+
+
+	<window name="btnSysClose" type="button">
+	   <property bclipwindow="true"  clipcolor="RGB(255,0,255)"/>
+	   <buttoninfo subtype="push" />
+	   <image state = "normal"  picfile="#standard.sysbtn.close.nor"  width="16" height="16"  />
+       <image state = "over"    picfile="#standard.sysbtn.close.hot"  width="16" height="16"  />
+       <image state = "down"    picfile="#standard.sysbtn.close.down" width="16" height="16"  />
+	</window>
+	
+	<window name="btnSysMin" type="button">
+    	<property bclipwindow="true"  clipcolor="RGB(255,0,255)"/>
+	    <buttoninfo subtype="push" />
+	    <image state = "normal"  picfile="#standard.sysbtn.min.nor"   width="16" height="16"/>
+        <image state = "over"    picfile="#standard.sysbtn.min.hot"   width="16" height="16"/>
+        <image state = "down"    picfile="#standard.sysbtn.min.down"  width="16" height="16"/>
+	</window>
+
+	<window name="dialog" type="dialog">
+	  <property clipcolor="RGB(255,0,255)" bkcolor="#system_bg" />
+	  <dialoginfo bordertop="5" borderbottom="5" borderleft="5" borderright="5" minwidth="400" minheight="300" captionheight="23" clientstarty="30"/>
+	  
+	  <image index="0"   state="all" picfile="#standard.window.topleft" left="0" top="0"  width="9" height="35" />
+	  <image index="0"   state="all" picfile="#standard.window.topmid"  left="9" top="0"  right="-9" height="35" />
+	  <image index="0"   state="all" picfile="#standard.window.topright" left="-9" top="0"  width="9" height="35" />
+	  
+	  <image index="0"   state="all" picfile="#standard.window.left"  left="0" top="35"  width="4" bottom="-9" />
+	  <image index="0"   state="all" picfile="#standard.window.right" left="-4" top="35"  width="4" bottom="-9" />
+	  
+	  <image index="0"   state="all" picfile="#standard.window.bottomleft" left="0" top="-9"  width="9" height="9" />
+	  <image index="0"   state="all" picfile="#standard.window.bottommid"  left="9" top="-9"  right="-9"  height="9" />
+	  <image index="0"   state="all" picfile="#standard.window.bottomright" left="-9" top="-9"  width="9" height="9" />
+	  
+	  <image index="1" state="all" picfile="#standard.main.ico" left="8" top="8" width="16" height="16"/>
+	  <text state="all" font="#default_bold" left="35" top="10" width="300" height="23" horzalign="left" textcolor="RGB(255,255,255)" />
+	  
+	  <sysmenu>
+	    <sysbtn name="minimise" left="-46" top="8" width="16" height="16" label="btnSysMin"/>
+	    <sysbtn name="close" left="-24" top="8" width="16" height="16"    label="btnSysClose"/>
+	  </sysmenu>
+	  
+	</window>
+
+
+</dswindow>
+</theme>
+	

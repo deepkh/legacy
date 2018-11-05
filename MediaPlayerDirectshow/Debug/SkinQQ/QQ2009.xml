@@ -1,0 +1,482 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<theme version="1.0" xmlns="http://www.qq.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.qq.com QQ2009.xsd">
+  <manifest name="default" folder="QQ2009" author="tencent" description="QQ2009" link="http://www.qq.com/" email="" language="zh-cn" />
+  <dsfont>
+    <font id="default" fontface="Tahoma" fontsize="12" />
+    <font id="default_bold" fontface="Tahoma" fontsize="12" bold="false" />
+  </dsfont>
+  <dscolor>
+    <color id="system.border" value="RGB(84,165,213)" />
+    <color id="system_bg" value="RGB(255,255,255)" />
+  </dscolor>
+  <dsimage>
+    <!-- window main ico -->
+    <image id="standard.main.ico" value="main.ico" iconwidth="16" iconheight="16"/>
+    <!--window background image-->
+    <image id="stardard.window.bk" value="window\windowBkg.bmp" />
+    <!--window system buttons image-->
+    <image id="stardard.sysbtn.close.nor" value="sysbutton\sys_close_nor.bmp" />
+    <image id="stardard.sysbtn.close.hot" value="sysbutton\sys_close_hot.bmp" />
+    <image id="stardard.sysbtn.close.down" value="sysbutton\sys_close_down.bmp" />
+    <image id="stardard.sysbtn.min.nor" value="sysbutton\sys_min_nor.bmp" />
+    <image id="stardard.sysbtn.min.hot" value="sysbutton\sys_min_hot.bmp" />
+    <image id="stardard.sysbtn.min.down" value="sysbutton\sys_min_down.bmp" />
+    <image id="stardard.sysbtn.max.nor" value="sysbutton\sys_max_nor.bmp" />
+    <image id="stardard.sysbtn.max.hot" value="sysbutton\sys_max_hot.bmp" />
+    <image id="stardard.sysbtn.max.down" value="sysbutton\sys_max_down.bmp" />
+    <image id="stardard.sysbtn.restore.nor" value="sysbutton\sys_restore_nor.bmp" />
+    <image id="stardard.sysbtn.restore.hot" value="sysbutton\sys_restore_hot.bmp" />
+    <image id="stardard.sysbtn.restore.down" value="sysbutton\sys_restore_down.bmp" />
+    <!--window button control-->
+    <image id="stardard.button.nor" value="button\button_normal.bmp" />
+    <image id="stardard.button.hot" value="button\button_hot.bmp" />
+    <image id="stardard.button.down" value="button\button_down.bmp" />
+    <image id="stardard.button.disable" value="button\button_disable.bmp" />
+    <image id="stardard.button.default" value="button\button_default.bmp" />
+    <!-- window check button control-->
+    <image id="stardard.checkbtn.nor" value="CheckButton\checkbox_nor.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="stardard.checkbtn.hot" value="CheckButton\checkbox_hot.bmp" />
+    <image id="stardard.checkbtn.tick.nor" value="CheckButton\checkbox_tick_nor.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="stardard.checkbtn.tick.hot" value="CheckButton\checkbox_tick_hot.bmp" />
+    <!-- window radio button control-->
+    <image id="stardard.radiobtn.nor" value="RadioButton\radiobtn_nor.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="stardard.radiobtn.hot" value="RadioButton\radiobtn_hot.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="stardard.radiobtn.tick.nor" value="RadioButton\radiobtn_tick_nor.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="stardard.radiobtn.tick.hot" value="RadioButton\radiobtn_tick_hot.bmp" transparentcolor="RGB(255,0,255)" />
+    <!--windows combobox-->
+    <image id="stardard.combobox.btn.nor" value="ComboBox\combobox_buttonNor.bmp" />
+    <image id="stardard.combobox.btn.hot" value="ComboBox\combobox_buttonHot.bmp" />
+    <image id="stardard.combobox.btn.down" value="ComboBox\combobox_buttonDown.bmp" />
+    <!--windows headerctrl-->
+    <image id="stardard.headerctrl.item.nor" value="headerctrl\headerctrl_itemNor.bmp" />
+    <image id="stardard.headerctrl.item.hot" value="headerctrl\headerctrl_itemHot.bmp" />
+    <image id="stardard.headerctrl.item.down" value="headerctrl\headerctrl_itemDown.bmp" />
+    <image id="stardard.headerctrl.arrowup" value="headerctrl\HeaderCtrl_arrowUp.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="stardard.headerctrl.arrowdown" value="headerctrl\HeaderCtrl_arrowdown.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="stardard.headerctrl.separator" value="headerctrl\Headerctrl_Sperator.png" />
+    <!--windows menu-->
+    <image id="stardard.menu.bk" value="menu\menubg.bmp"/>
+    <image id="stardard.menu.item.select" value="menu\menuitem_select.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="stardard.menu.item.check" value="menu\menuItem_check.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="stardard.menu.item.arrow" value="menu\menuItem_arrow.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="stardard.menu.item.separator" value="menu\menuItem_seperator.bmp" />
+    <!--windows progress control-->
+    <image id="stardard.progress.fg" value="progress\ProgressForeground.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="stardard.progress.bg" value="progress\ProgressBackground.bmp" transparentcolor="RGB(255,0,255)" />
+    <!--windows slider control-->
+    <image id="stardard.slider.bg" value="slider\slider_background.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="stardard.slider.fg" value="slider\slider_foreground.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="stardard.slider.drag" value="slider\slider_dragBackground.png" />
+    <!--windows scrollbar-->
+    <image id="stardard.scrollbar" value="scrollbar\scrollbar.bmp" />
+   
+    <!--TransparentTest Dlg-->
+    <image id="mainpanel.bk" value="MainPanel_window_windowBkg.bmp" />
+    <image id="searchedit.bk" value="searchedit\editbk.bmp" />
+    <image id="mainmenubutton.nor" value="MainMenuButton\mainMenuButton_nor.png" />
+    <image id="mainmenubutton.hot" value="MainMenuButton\mainMenuButton_hot.png" />
+    <image id="mainmenubutton.hot1" value="MainMenuButton\mainMenuButton_hot1.png" canadjust="false" />
+    <image id="maindlg.iconbtn.hot" value="iconbutton\butonHot.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="maindlg.iconbtn.down" value="iconbutton\buttonDown.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="maindlg.iconbtn.sms" value="icon\Wireless.png" canadjust="false" />
+    <image id="maindlg.iconbtn.appcenter" value="icon\appCenter_16.png" canadjust="false" />
+    <image id="maindlg.iconbtn.message" value="icon\message.png" canadjust="false" />
+    <image id="maindlg.iconbtn.tools" value="icon\Tools.png" canadjust="false" />
+    <image id="maindlg.iconbtn.find" value="icon\find.png" canadjust="false" />
+    <image id="maindlg.iconbtn.brower" value="icon\browser.png" canadjust="false" />
+    <image id="maindlg.iconbtn.chat" value="icon\taotao.png" canadjust="false" />
+    <image id="maindlg.iconbtn.game" value="icon\game.png" canadjust="false" />
+    <image id="maindlg.iconbtn.pet" value="icon\pet.png" canadjust="false" />
+    <image id="maindlg.iconbtn.music" value="icon\music.png" canadjust="false" />
+    <image id="maindlg.iconbtn.live" value="icon\live.png" canadjust="false" />
+    <image id="maindlg.bk.bottom" value="MainPanel_bk_bottom.png" />
+    <image id="mfctest.bk" value="newdlg_bk.PNG" />
+    <image id="cmd.menuicon.away" value="statusflag\away.png" canadjust="false" />
+    <image id="cmd.menuicon.busy" value="statusflag\busy.png" canadjust="false" />
+    <image id="cmd.menuicon.imoffline" value="statusflag\imoffline.png" canadjust="false" />
+    <image id="cmd.menuicon.imonline" value="statusflag\imonline.png" canadjust="false" />
+    <image id="cmd.menuicon.mute" value="statusflag\mute.png" canadjust="false" />
+    <image id="cmd.menuicon.Qme" value="statusflag\Qme.png" canadjust="false" />
+    <image id="cmd.menuicon.invisible" value="statusflag\invisible.png" canadjust="false" />
+    <image id="maindlg.downarraw" value="downarrow.bmp" transparentcolor="RGB(255,0,255)" />
+    <image id="search.edit.back" value="edit\edit_back.bmp" />
+    <image id="main.figure.nor" value="MainMenuButton\mainfigure_nor.png" />
+    <image id="main.figure.over" value="MainMenuButton\mainfigure_over.png" />
+    <image id="main.figure" value="MainMenuButton\figure.png" canadjust="false" />
+  </dsimage>
+  <dscommand>
+    <command code="32774" picfile="#cmd.menuicon.away" description="icon open file" />
+    <command code="32773" picfile="#cmd.menuicon.busy" description="icon close file" />
+    <command code="32777" picfile="#cmd.menuicon.imoffline" description="icon close file" />
+    <command code="32771" picfile="#cmd.menuicon.imonline" description="icon close file" />
+    <command code="32775" picfile="#cmd.menuicon.mute" description="icon close file" />
+    <command code="32772" picfile="#cmd.menuicon.Qme" description="icon close file" />
+    <command code="32776" picfile="#cmd.menuicon.invisible" description="icon close file" />
+  </dscommand>
+  <dswindow>
+    <window name="static" type="static">
+      <property bkcolor="#system_bg" btransparentbk="true" />
+      <text state="all" font="#default" horzalign="left" textcolor="RGB(0,0,0)" />
+    </window>
+    <window name="edit" type="edit">
+      <property bkcolor="#system_bg" btransparentbk="false" />
+      <rect id="edit.border" bordercolor="#system.border" fillcolor="RGB(255,255,255)" borderwidth="2" style="hole" />
+    </window>
+    <window name="button" type="button">
+      <property bclipwindow="true" tooltips="#default" clipcolor="RGB(255,0,255)" />
+      <buttoninfo subtype="push" width="69" height="21" />
+      <image state="normal" picfile="#stardard.button.nor" />
+      <image state="over" picfile="#stardard.button.hot" />
+      <image state="down" picfile="#stardard.button.down" />
+      <image state="disable" picfile="#stardard.button.dis" />
+      <text state="all" font="#default" horzalign="center" bsingleline="true" textcolor="RGB(0,0,0)" />
+    </window>
+	
+    <window name="searchedit" type="edit">
+      <property bkcolor="#system_bg" btransparentbk="false" />
+      <image id="edit.bkimage" state="all" picfile="#search.edit.back" />
+    </window>
+    <window name="btnSysClose" type="button">
+      <property bclipwindow="true" clipcolor="RGB(255,0,255)" />
+      <buttoninfo subtype="push" />
+      <image state="normal" picfile="#stardard.sysbtn.close.nor"  width="43" height="18" />
+      <image state="over" picfile="#stardard.sysbtn.close.hot" width="43" height="18" />
+      <image state="down" picfile="#stardard.sysbtn.close.down" width="43" height="18" />
+    </window>
+    <window name="btnSysMin" type="button">
+      <property bclipwindow="true" clipcolor="RGB(255,0,255)" />
+      <buttoninfo subtype="push" />
+      <image state="normal" picfile="#stardard.sysbtn.min.nor" width="26" height="18" />
+      <image state="over" picfile="#stardard.sysbtn.min.hot" width="26" height="18" />
+      <image state="down" picfile="#stardard.sysbtn.min.down" width="26" height="18" />
+    </window>
+    <window name="headerctrl" type="headerctrl">
+      <property bkcolor="#system_bg" bordercolor="RGB(255,0,0)" />
+      <image id="header.bk.nor" picfile="#stardard.headerctrl.item.nor" />
+      <image id="header.bk.over" picfile="#stardard.headerctrl.item.hot" paintmode="stretchparthorz" left_part="2" right_part="2" />
+      <image id="header.bk.down" picfile="#stardard.headerctrl.item.down" paintmode="stretchparthorz" left_part="2" right_part="2" />
+      <image id="header.sort.arrow.ascend" picfile="#stardard.headerctrl.arrowup" />
+      <image id="header.sort.arrow.descend" picfile="#stardard.headerctrl.arrowdown" />
+      <image id="header.separator" picfile="#stardard.headerctrl.separator" />
+      <text id="header.text" font="#default" horzalign="left" vertalign="center" textcolor="RGB(0,0,0)" />
+    </window>
+    <window name="listctrl" type="">
+      <property bkcolor="#system_bg" bordercolor="RGB(255,0,0)" scrollbar="scrollbar" headerctrl="headerctrl" />
+      <rect id="scrollwindow.border" index="1" bordercolor="#system.border" fillcolor="RGB(255,255,255)" borderwidth="2" style="hole" />
+    </window>
+    <window name="btnSysMax" type="button">
+      <buttoninfo subtype="push" />
+      <image index="1" state="normal" picfile="#stardard.sysbtn.max.nor" width="26" height="18" />
+      <image index="2" state="over" picfile="#stardard.sysbtn.max.hot" width="26" height="18" />
+      <image index="3" state="down" picfile="#stardard.sysbtn.max.down" width="26" height="18" />
+      <image index="4" state="normal" picfile="#stardard.sysbtn.restore.nor" width="26" height="18" />
+      <image index="5" state="over" picfile="#stardard.sysbtn.restore.hot" width="26" height="18" />
+      <image index="6" state="down" picfile="#stardard.sysbtn.restore.down"  width="26" height="18" />
+    </window>
+    <window name="checkbutton" type="button">
+      <property btransparentbk="true" />
+      <buttoninfo subtype="check" />
+      <image state="normal" picfile="#stardard.checkbtn.nor" left="2" top="0" width="15" height="15" />
+      <image state="over" picfile="#stardard.checkbtn.hot" left="2" top="0" width="15" height="15" />
+      <image state="checked" picfile="#stardard.checkbtn.tick.nor" left="2" top="0" width="15" height="15" />
+      <image state="checkedover" picfile="#stardard.checkbtn.tick.hot" left="2" top="0" width="15" height="15" />
+      <text state="all" font="#default" left="18" bsingleline="true" textcolor="RGB(0,0,0)" />
+
+    </window>
+    <window name="radiobutton" type="button">
+      <property btransparentbk="true" />
+      <buttoninfo subtype="radio" />
+      <image state="normal" picfile="#stardard.radiobtn.nor" left="2" top="1" width="15" height="15" />
+      <image state="over" picfile="#stardard.radiobtn.hot" left="2" top="1" width="15" height="15" />
+      <image state="checked" picfile="#stardard.radiobtn.tick.nor" left="2" top="1" width="15" height="15" />
+      <image state="checkedover" picfile="#stardard.radiobtn.tick.hot" left="2" top="1" width="15" height="15" />
+      <text state="all" font="#default" left="20" top="1" bsingleline="true" textcolor="RGB(0,0,0)" />
+    </window>
+    <window name="scrollbar" type="scrollbar">
+      <scrollinfo width="17" height="17" interval="1" splitwidth="3" />
+      <image id="scrollbar.bk.pic" picfile="#stardard.scrollbar" />
+    </window>
+    <window name="scrollwindow" type="">
+      <property bkcolor="#system_bg" bordercolor="RGB(255,0,0)" scrollbar="scrollbar" />
+      <rect id="scrollwindow.border" index="1" bordercolor="#system.border" fillcolor="RGB(255,255,255)" borderwidth="2" style="hole" />
+    </window>
+    <window name="sliderctrl" type="sliderctrl">
+      <property btransparentbk="true" />
+      <image state="normal" picfile="#stardard.slider.drag" />
+      <image state="over" picfile="#stardard.slider.drag" />
+      <image state="down" picfile="#stardard.slider.drag" />
+      <image id="slider.bg" state="non" picfile="#stardard.slider.fg" paintmode="stretchparthorz" left_part="10" right_part="10" />
+    </window>
+    <window name="progress" type="progress">
+      <property btransparentbk="true" />
+      <progressinfo leftpad="1" toppad="1" />
+      <image id="progress.bk" picfile="#stardard.progress.bg" paintmode="stretchparthorz" left_part="5" right_part="5" />
+      <image id="progress.step" picfile="#stardard.progress.fg" paintmode="stretchparthorz" left_part="5" right_part="5" />
+    </window>
+    <window name="groupbox" type="groupbox">
+      <groupboxinfo textoffsetx="20" textoffsety="2" />
+      <text id="groupbox.text" font="#default" horzalign="left" vertalign="top" textcolor="RGB(0,0,255)" />
+      <rect id="groupbox.rect" index="1" bordercolor="RGB(84,165,213)" fillcolor="RGB(255,255,255)" borderwidth="1" style="hole" />
+    </window>
+    <window name="menu" type="menu">
+      <property bkcolor="#system_bg" clipcolor="RGB(255,0,255)" />
+      <menuinfo height="23" width="100" separatorheight="2" iconx="9" icony="5" borderwidth="2" iconwidth="11" />
+      <text state="normal" index="2" left="23" horzalign="left" font="#default" textcolor="RGB(69,91,184)" />
+      <image state="over" index="3" picfile="#stardard.menu.item.select" paintmode="stretchpartall" left_part="3" top_part="3" right_part="3" bottom_part="3" />
+      <text state="over" index="4" left="23" horzalign="left" font="#default" textcolor="RGB(255,255,255)" />
+      <text state="disable" index="7" left="23" horzalign="left" font="#default" textcolor="RGB(124,145,175)" />
+      <image state="non" id="menu.back" picfile="#stardard.menu.bk" paintmode="stretchpartall" left_part="4" top_part="4" right_part="4" bottom_part="4" />
+      <image state="non" id="menu.item" picfile="#stardard.menu.item.select" />
+      <image state="non" id="menu.sperator" picfile="#stardard.menu.item.separator" left="33" right="-8" />
+    </window>
+    <window name="combobox" type="combobox">
+      <property bkcolor="RGB(255,255,255)" btransparentbk="false" />
+      <rect state="all" index="1" bordercolor="#system.border" borderwidth="2" fillcolor="RGB(255,255,255)" style="hole" />
+      <image state="normal" index="2" left="-21" top="2" width="20" height="18" picfile="#stardard.combobox.btn.nor" />
+      <image state="over" index="2" left="-21" top="2" width="20" height="18" picfile="#stardard.combobox.btn.hot" />
+      <image state="down" index="2" left="-21" top="2" width="20" height="18" picfile="#stardard.combobox.btn.down" />
+    </window>
+	
+    <window name="dialog" type="dialog">
+      <property clipcolor="RGB(255,0,255)" />
+      <dialoginfo bordertop="5" borderbottom="5" borderleft="5" borderright="5" minwidth="400" minheight="300" DrawSysMenu="true" allclient="false" captionheight="23" clientstarty="30"/>
+      <image index="0" state="all" picfile="#stardard.window.bk" paintmode="stretchpartall" left_part="11" top_part="88" right_part="11" bottom_part="42" />
+      <image index="1" state="all" picfile="#standard.main.ico" left="8" top="8" width="16" height="16"/>
+      <text state="all" font="#default_bold" left="25" top="5" width="300" height="23" horzalign="left" textcolor="RGB(255,255,255)" />
+      <windowregion type="clipbycolor">
+        <shape type="rectangle" left="-5" top="0" width="5" height="5" />
+        <shape type="rectangle" left="0" top="0" width="5" height="5" />
+        <shape type="rectangle" left="0" top="-5" width="5" height="5" />
+        <shape type="rectangle" left="-5" top="-5" width="5" height="5" />
+      </windowregion>
+      <sysmenu>
+        <sysbtn name="minimise" left="0" top="0" width="26" height="18" label="btnSysMin" />
+        <sysbtn name="maximise" left="30" top="0" width="26" height="18" label="btnSysMax" />
+        <sysbtn name="close" left="60" top="0" width="43" height="18" label="btnSysClose" />
+      </sysmenu>
+    </window>
+    <window name="nomaxdialog" type="dialog">
+      <property clipcolor="RGB(255,0,255)" />
+      <dialoginfo bordertop="5" borderbottom="5" borderleft="5" borderright="5" minwidth="400" minheight="300" DrawSysMenu="true" allclient="false" captionheight="23" />
+      <image index="0" state="all" picfile="#stardard.window.bk" paintmode="stretchpartall" left_part="11" top_part="88" right_part="11" bottom_part="42" />
+	  
+       <image index="1" state="all" picfile="#standard.main.ico" left="8" top="8" width="16" height="16"/>
+      <text state="all" font="#default_bold" left="25" top="5" width="300" height="23" horzalign="left" textcolor="RGB(255,255,255)" />
+      <windowregion type="clipbycolor">
+        <shape type="rectangle" left="-5" top="0" width="5" height="5" />
+        <shape type="rectangle" left="0" top="0" width="5" height="5" />
+        <shape type="rectangle" left="0" top="-5" width="5" height="5" />
+        <shape type="rectangle" left="-5" top="-5" width="5" height="5" />
+      </windowregion>
+      <sysmenu>
+        <sysbtn name="close" left="-50" top="0" width="43" height="18" label="btnSysClose" />
+        <sysbtn name="minimise" left="-76" top="0" width="26" height="18" label="btnSysMin" />
+      </sysmenu>
+    </window>
+    <window name="mfctestdialog" type="dialog">
+      <property clipcolor="RGB(255,0,255)" />
+      <dialoginfo bordertop="5" borderbottom="5" borderleft="5" borderright="5" minwidth="400" minheight="300" DrawSysMenu="true" allclient="false" captionheight="23" />
+      <image index="0" state="all" picfile="#stardard.window.bk" paintmode="stretchpartall" left_part="11" top_part="88" right_part="11" bottom_part="42" />
+	   <image index="1" state="all" picfile="#standard.main.ico" left="8" top="8" width="16" height="16"/>
+      <image index="1" state="all" picfile="#mfctest.bk" left="2" top="58" bottom="-42" right="-2" paintmode="tilefill" />
+      <text state="all" font="#default_bold" left="25" top="5" width="300" height="23" horzalign="left" textcolor="RGB(255,255,255)" content="MFC Control Test" />
+      <windowregion type="clipbycolor">
+        <shape type="rectangle" left="-5" top="0" width="5" height="5" />
+        <shape type="rectangle" left="0" top="0" width="5" height="5" />
+        <shape type="rectangle" left="0" top="-5" width="5" height="5" />
+        <shape type="rectangle" left="-5" top="-5" width="5" height="5" />
+      </windowregion>
+      <sysmenu>
+        <sysbtn name="minimise" left="-102" top="0" width="26" height="18" label="btnSysMin" />
+        <sysbtn name="maximise" left="-76" top="0" width="26" height="18" label="btnSysMax" />
+        <sysbtn name="close" left="-50" top="0" width="43" height="18" label="btnSysClose" />
+      </sysmenu>
+    </window>
+    <window name="maindialog" type="dialog">
+      <property clipcolor="RGB(255,0,255)" />
+      <dialoginfo bordertop="5" borderbottom="5" borderleft="5" borderright="5" minwidth="215" minheight="226" DrawSysMenu="true" allclient="false" captionheight="100" clientstarty="26"/>
+	   <image index="1" state="all" picfile="#standard.main.ico" left="8" top="8" width="16" height="16"/>
+      <image state="all" picfile="#mainpanel.bk" paintmode="stretchpartall" left_part="16" top_part="123" right_part="203" bottom_part="64" />
+      <image state="all" picfile="#searchedit.bk" top="90" left="7" height="24" right="-7" paintmode="stretchparthorz" left_part="12" right_part="31" />
+      <image state="all" index="101" picfile="#maindlg.bk.shading1" top="25" left="-192" width="190" height="67" right="-2" />
+      <image state="all" index="101" picfile="#maindlg.bk.shading.bottom1" top="-52" left="-192" bottom="-2" width="190" height="50" right="-2" />
+      <image state="all" index="102" visible="false" picfile="#maindlg.bk.shading2" top="25" left="-192" width="190" height="67" right="-2" />
+      <image state="all" index="102" visible="false" picfile="#maindlg.bk.shading.bottom2" top="-52" left="-192" bottom="-2" width="190" height="50" right="-2" />
+      <image state="all" index="103" visible="false" picfile="#maindlg.bk.shading3" top="25" left="-192" width="190" height="67" right="-2" />
+      <image state="all" index="103" visible="false" picfile="#maindlg.bk.shading.bottom3" top="-52" left="-192" bottom="-2" width="190" height="50" right="-2" />
+      <image state="all" index="104" visible="false" picfile="#maindlg.bk.shading4" top="25" left="-192" width="190" height="67" right="-2" />
+      <image state="all" index="104" visible="false" picfile="#maindlg.bk.shading.bottom4" top="-52" left="-192" bottom="-2" width="190" height="50" right="-2" />
+      <image state="all" index="105" visible="false" picfile="#maindlg.bk.shading5" top="25" left="-192" width="190" height="67" right="-2" />
+      <image state="all" index="105" visible="false" picfile="#maindlg.bk.shading.bottom5" top="-52" left="-192" bottom="-2" width="190" height="50" right="-2" />
+      <image state="all" index="106" visible="false" picfile="#maindlg.bk.shading6" top="25" left="-192" width="190" height="67" right="-2" />
+      <image state="all" index="106" visible="false" picfile="#maindlg.bk.shading.bottom6" top="-52" left="-192" bottom="-2" width="190" height="50" right="-2" />
+      <text state="all" font="#default_bold" left="25" top="5" width="300" height="23" horzalign="left" textcolor="RGB(255,255,255)" />
+      <windowregion type="clipbycolor">
+        <shape type="rectangle" left="-5" top="0" width="5" height="5" />
+        <shape type="rectangle" left="0" top="0" width="5" height="5" />
+        <shape type="rectangle" left="0" top="-18" width="18" height="18" />
+        <shape type="rectangle" left="-5" top="-5" width="5" height="5" />
+      </windowregion>
+      <sysmenu>
+        <sysbtn name="minimise" left="-102" top="0" width="26" height="18" label="btnSysMin" />
+        <sysbtn name="maximise" left="-76" top="0" width="26" height="18" label="btnSysMax" />
+        <sysbtn name="close" left="-50" top="0" width="43" height="18" label="btnSysClose" />
+      </sysmenu>
+    </window>
+    <window name="mainmenubutton" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" width="42" height="42" />
+      <image state="normal" picfile="#mainmenubutton.nor" />
+      <image state="over" picfile="#mainmenubutton.hot" />
+      <image state="over" picfile="#mainmenubutton.hot1" left="9" top="9" width="21" height="22" />
+      <image state="down" picfile="#mainmenubutton.hot" />
+      <image state="down" picfile="#mainmenubutton.hot1" left="9" top="9" width="21" height="22" />
+    </window>
+    <window name="smsbutton" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" width="22" height="22" />
+      <image state="normal" picfile="#maindlg.iconbtn.sms" width="20" height="20" />
+      <image state="over" picfile="#maindlg.iconbtn.hot" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="over" picfile="#maindlg.iconbtn.sms" width="20" height="20" />
+      <image state="down" picfile="#maindlg.iconbtn.down" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="down" picfile="#maindlg.iconbtn.sms" left="1" top="1" width="20" height="20" />
+    </window>
+    <window name="messagebutton" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" width="22" height="22" />
+      <image state="normal" picfile="#maindlg.iconbtn.message" width="20" height="20" />
+      <image state="over" picfile="#maindlg.iconbtn.hot" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="over" picfile="#maindlg.iconbtn.message" width="20" height="20" />
+      <image state="down" picfile="#maindlg.iconbtn.down" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="down" picfile="#maindlg.iconbtn.message" left="2" top="1" width="20" height="20" />
+    </window>
+    <window name="appcenterbutton" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" width="22" height="22" />
+      <image state="normal" picfile="#maindlg.iconbtn.appcenter" width="20" height="20" />
+      <image state="over" picfile="#maindlg.iconbtn.hot" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="over" picfile="#maindlg.iconbtn.appcenter" width="20" height="20" />
+      <image state="down" picfile="#maindlg.iconbtn.down" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="down" picfile="#maindlg.iconbtn.appcenter" left="1" top="1" width="20" height="20" />
+    </window>
+    <window name="findbutton" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" width="67" height="22" />
+      <image state="normal" picfile="#maindlg.iconbtn.find" left="3" width="20" height="20" />
+      <text state="normal" left="24" font="#default" top="1" horzalign="left" textcolor="RGB(0,0,0)" />
+      <image state="over" picfile="#maindlg.iconbtn.hot" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="over" picfile="#maindlg.iconbtn.find" left="3" width="20" height="20" />
+      <text state="over" left="24" font="#default" top="1" horzalign="left" textcolor="RGB(0,0,0)" />
+      <image state="down" picfile="#maindlg.iconbtn.down" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="down" picfile="#maindlg.iconbtn.find" left="4" top="1" width="20" height="20" />
+      <text state="down" left="26" top="2" font="#default" horzalign="left" textcolor="RGB(0,0,0)" />
+    </window>
+    <window name="browerbutton" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" width="22" height="22" />
+      <image state="normal" picfile="#maindlg.iconbtn.brower" width="20" height="20" />
+      <image state="over" picfile="#maindlg.iconbtn.hot" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="over" picfile="#maindlg.iconbtn.brower" width="20" height="20" />
+      <image state="down" picfile="#maindlg.iconbtn.down" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="down" picfile="#maindlg.iconbtn.brower" left="1" top="1" width="20" height="20" />
+    </window>
+    <window name="toolsbutton" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" width="22" height="20" />
+      <image state="normal" picfile="#maindlg.iconbtn.tools" width="20" height="20" />
+      <image state="over" picfile="#maindlg.iconbtn.hot" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="over" picfile="#maindlg.iconbtn.tools" width="20" height="20" />
+      <image state="down" picfile="#maindlg.iconbtn.down" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="down" picfile="#maindlg.iconbtn.tools" left="1" top="1" width="20" height="20" />
+    </window>
+    <window name="gamebutton" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" width="22" height="22" />
+      <image state="normal" picfile="#maindlg.iconbtn.game" width="20" height="20" />
+      <image state="over" picfile="#maindlg.iconbtn.hot" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="over" picfile="#maindlg.iconbtn.game" width="20" height="20" />
+      <image state="down" picfile="#maindlg.iconbtn.down" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="down" picfile="#maindlg.iconbtn.game" left="1" top="1"  width="20" height="20" />
+    </window>
+    <window name="chatbutton" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" width="22" height="22" />
+      <image state="normal" picfile="#maindlg.iconbtn.chat" width="20" height="20" />
+      <image state="over" picfile="#maindlg.iconbtn.hot" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="over" picfile="#maindlg.iconbtn.chat" width="20" height="20" />
+      <image state="down" picfile="#maindlg.iconbtn.down" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="down" picfile="#maindlg.iconbtn.chat" left="1" top="1" width="20" height="20" />
+    </window>
+    <window name="petbutton" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" width="22" height="22" />
+      <image state="normal" picfile="#maindlg.iconbtn.pet" width="20" height="20" />
+      <image state="over" picfile="#maindlg.iconbtn.hot" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="over" picfile="#maindlg.iconbtn.pet" width="20" height="20" />
+      <image state="down" picfile="#maindlg.iconbtn.down" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="down" picfile="#maindlg.iconbtn.pet" left="1" top="1" width="20" height="20" />
+    </window>
+    <window name="musicbutton" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" width="22" height="22" />
+      <image state="normal" picfile="#maindlg.iconbtn.music" width="20" height="20" />
+      <image state="over" picfile="#maindlg.iconbtn.hot" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="over" picfile="#maindlg.iconbtn.music" width="20" height="20" />
+      <image state="down" picfile="#maindlg.iconbtn.down" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="down" picfile="#maindlg.iconbtn.music" left="1" top="1" width="20" height="20" />
+    </window>
+    <window name="livebutton" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" width="22" height="22" />
+      <image state="normal" picfile="#maindlg.iconbtn.live" width="20" height="20" />
+      <image state="over" picfile="#maindlg.iconbtn.hot" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="over" picfile="#maindlg.iconbtn.live" width="20" height="20" />
+      <image state="down" picfile="#maindlg.iconbtn.down" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="down" picfile="#maindlg.iconbtn.live" left="1" top="1" width="20" height="20" />
+    </window>
+    <window name="buttonEdit" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" height="20" />
+      <text state="all" left="2" font="#default" horzalign="left" textcolor="RGB(0,0,0)" />
+      <image state="over" picfile="#maindlg.iconbtn.hot" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="down" picfile="#maindlg.iconbtn.down" paintmode="stretchparthorz" left_part="3" right_part="3" />
+    </window>
+    <window name="buttonMainFigure" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" height="58" width="58" />
+      <image state="normal" picfile="#main.figure.nor" />
+      <image state="over" picfile="#main.figure.over" />
+      <image state="down" picfile="#main.figure.over" />
+      <image state="all" picfile="#main.figure" left="9" top="9" width="40" height="40" />
+    </window>
+    <window name="statusbutton" type="button">
+      <property bclipwindow="true" tooltips="#default" btransparentbk="true" />
+      <buttoninfo subtype="push" width="39" height="20" />
+      <image state="all" index="3" picfile="#cmd.menuicon.imonline" left="3" top="4" width="11" height="11" rectinfile="0,0,11,11" />
+      <image state="all" index="2" picfile="#maindlg.downarraw" left="15" top="2" width="16" height="16" />
+      <image state="down" index="1" picfile="#maindlg.iconbtn.down" paintmode="stretchparthorz" left_part="3" right_part="3" />
+      <image state="over" index="0" picfile="#maindlg.iconbtn.hot" paintmode="stretchparthorz" left_part="3" right_part="3" />
+    </window>
+	
+   <window name="toolbarctrl" type="toolbarctrl">
+   <property btransparentbk="true" />
+     <rect  state="non" id="toolbar.control.bk"  bordercolor="RGB(35,115,174)" borderwidth="5" fillcolor="RGB(241,249,0)"/>
+	 
+	 <!--<rect  state="normal"    index="1"  bordercolor="RGB(136,165,212)" borderwidth="1" fillcolor="RGB(217,247,0)"/>-->
+	 <text  state="normal"    index="2"  horzalign="left" font="#default" textcolor="RGB(0,0,0)"/>
+     
+	 
+	 <rect  state="over"    index="3" bordercolor="RGB(136,165,212)" borderwidth="1" fillcolor="RGB(217,247,255)"/>
+	 <text  state="over"    index="4"    horzalign="left" font="#default" textcolor="RGB(0,0,0)"/>
+     
+	 <rect  state="down"    index="3" bordercolor="RGB(136,9,9)" borderwidth="1" fillcolor="RGB(217,9,255)"/>
+	 <text  state="down"    index="4"     horzalign="left" font="#default" textcolor="RGB(0,0,0)"/>
+     
+	 
+	 <!--<rect  state="disable" index="5" bordercolor="RGB(235,232, 114)" borderwidth="1" fillcolor="RGB(0,0255)"/>-->
+	 <text  state="disable" index="7" left="23" horzalign="left" font="#default" textcolor="RGB(178,178,178)"/>
+	 
+	 
+   </window>
+  </dswindow>
+</theme>

@@ -1,0 +1,66 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: MPlayer - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x404 /fo"Debug/MPlayer.res" /d "_DEBUG" "D:\Code VC6 Old\Code DirectShow\MPlayer\MPlayer.rc"" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP177.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_UNICODE" /D "UNICODE" /D "_WIN32_DCOM" /FR"Debug/" /Fp"Debug/MPlayer.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\Code VC6 Old\Code DirectShow\MPlayer\Canvas.cpp"
+"D:\Code VC6 Old\Code DirectShow\MPlayer\CCMediaPlay.cpp"
+"D:\Code VC6 Old\Code DirectShow\MPlayer\CProgress.cpp"
+"D:\Code VC6 Old\Code DirectShow\MPlayer\GrayTransform.cpp"
+"D:\Code VC6 Old\Code DirectShow\MPlayer\MPlayer.cpp"
+"D:\Code VC6 Old\Code DirectShow\MPlayer\MPlayerDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP177.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP178.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_UNICODE" /D "UNICODE" /D "_WIN32_DCOM" /FR"Debug/" /Fp"Debug/MPlayer.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\Code VC6 Old\Code DirectShow\MPlayer\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP178.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP179.tmp" with contents
+[
+/nologo /entry:"wWinMainCRTStartup" /subsystem:windows /incremental:yes /pdb:"Debug/MPlayer.pdb" /debug /machine:I386 /out:"Debug/MPlayer.exe" /pdbtype:sept 
+".\Debug\Canvas.obj"
+".\Debug\CCMediaPlay.obj"
+".\Debug\CProgress.obj"
+".\Debug\GrayTransform.obj"
+".\Debug\MPlayer.obj"
+".\Debug\MPlayerDlg.obj"
+".\Debug\StdAfx.obj"
+".\Debug\MPlayer.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP179.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+Canvas.cpp
+CCMediaPlay.cpp
+CProgress.cpp
+D:\Code VC6 Old\Code DirectShow\MPlayer\CProgress.cpp(49) : warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+D:\Code VC6 Old\Code DirectShow\MPlayer\CProgress.cpp(72) : warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+GrayTransform.cpp
+MPlayer.cpp
+MPlayerDlg.cpp
+Generating Code...
+D:\Code VC6 Old\Code DirectShow\MPlayer\CCMediaPlay.cpp(536) : warning C4700: local variable 'dwRegister' used without having been initialized
+Linking...
+Creating command line "bscmake.exe /nologo /o"Debug/MPlayer.bsc"  ".\Debug\StdAfx.sbr" ".\Debug\Canvas.sbr" ".\Debug\CCMediaPlay.sbr" ".\Debug\CProgress.sbr" ".\Debug\GrayTransform.sbr" ".\Debug\MPlayer.sbr" ".\Debug\MPlayerDlg.sbr""
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+MPlayer.exe - 0 error(s), 3 warning(s)
+</pre>
+</body>
+</html>
